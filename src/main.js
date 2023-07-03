@@ -11,7 +11,7 @@ const tripMainElement = document.querySelector('.trip-main');
 const tripPresenter = new TripPresenter({tripContainer: tripSort});
 
 
-render(new NewTaskButtonView(), tripMainElement);
-render(new FilterView(), tripMainElement);
 render(new TripInfo(), tripMainElement);
+render(new FilterView(), tripMainElement);
+render(new NewTaskButtonView(), tripMainElement);
 tripPresenter.init();
