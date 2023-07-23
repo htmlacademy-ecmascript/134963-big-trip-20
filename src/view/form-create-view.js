@@ -1,6 +1,10 @@
 import { createElement } from '../render.js';
+import {humanizeTaskDueDate} from '../mock/utils.js';
 
-function createFormTemplate() {
+function createFormTemplate(task) {
+  const {dueDate} = task;
+
+  const date = humanizeTaskDueDate(dueDate);
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -76,7 +80,8 @@ function createFormTemplate() {
                     id="event-type-flight-1" 
                     class="event__type-input  visually-hidden" 
                     type="radio" name="event-type" 
-                    value="flight" checked
+                    value="flight" 
+                    checked
                     >
                   <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
                 </div>
@@ -140,7 +145,7 @@ function createFormTemplate() {
               id="event-start-time-1" 
               type="text" 
               name="event-start-time" 
-              value="19/03/19 00:00"
+              value=${date}
             >
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
@@ -149,7 +154,7 @@ function createFormTemplate() {
               id="event-end-time-1" 
               type="text"
               name="event-end-time"
-              value="19/03/19 00:00"
+              value=${date}
             >
           </div>
 
@@ -255,8 +260,13 @@ function createFormTemplate() {
 }
 
 export default class FormCreate {
+  constructor({task}) {
+    this.task = task;
+  }
+
+
   getTemplate() {
-    return createFormTemplate();
+    return createFormTemplate(this.task);
   }
 
   getElement() {

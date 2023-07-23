@@ -1,59 +1,10 @@
-import { getRandomArrayElement , getRandomInteger} from './utils.js';
-import { TYPEARRAY, TITLEARRAY } from './const.js';
+import { getRandomInteger } from './utils.js';
 
-const mockOffers = [
-  {
-    type: getRandomArrayElement(TYPEARRAY),
-    offers: [
-      {
-        id: getRandomInteger(1, 1000),
-        title: getRandomArrayElement(TITLEARRAY),
-        price: getRandomInteger(1, 100),
-      }
-    ]
-  },
-  {
-    type: getRandomArrayElement(TYPEARRAY),
-    offers: [
-      {
-        id: String(getRandomInteger(1, 1000)),
-        title: getRandomArrayElement(TITLEARRAY),
-        price: getRandomInteger(1, 15000),
-      }
-    ]
-  },
-  {
-    type: getRandomArrayElement(TYPEARRAY),
-    offers: [
-      {
-        id: getRandomInteger(1, 1000),
-        title: getRandomArrayElement(TITLEARRAY),
-        price: getRandomInteger(1, 100),
-      }
-    ]
-  },
-  {
-    type: getRandomArrayElement(TYPEARRAY),
-    offers: [
-      {
-        id: getRandomInteger(1, 1000),
-        title: getRandomArrayElement(TITLEARRAY),
-        price: getRandomInteger(1, 300),
-      }
-    ]
-  },
-  {
-    type: getRandomArrayElement(TYPEARRAY),
-    offers: [
-      {
-        id: getRandomInteger(1, 1000),
-        title: getRandomArrayElement(TITLEARRAY),
-        price: getRandomInteger(1, 1000),
-      }
-    ]
-  },
-];
+const generateMockOffers = (type) => ({
+  id: crypto.randomUUID(),
+  title: `Offer ${type}`,
+  price: getRandomInteger(1, 10000)
+});
 
-const generateOffers = () => mockOffers;
 
-export {generateOffers};
+export {generateMockOffers};

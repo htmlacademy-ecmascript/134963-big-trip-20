@@ -8,20 +8,36 @@ export default class TripPresenter {
   tripComponent = new TripPointsList();
   sortComponent = new SortView();
 
-  constructor({tripContainer, pointModel}) {
+  constructor({tripContainer, pointsModel, offersModel, destinationsModel}) {
     this.tripContainer = tripContainer;
-    this.pointModel = pointModel;
+    this.pointsModel = pointsModel;
+    this.offersModel = offersModel;
+    this.destinationsModel = destinationsModel;
+
+    this.points = [...this.pointsModel.get()];
   }
 
   init() {
-    this.tripPoints = [...this.pointModel.getPoints()];
-
     render(this.sortComponent, this.tripContainer);
     render(this.tripComponent, this.tripContainer);
-    render (new FormEditTemplate(), this.tripComponent.getElement());
 
-    for (let i = 0; i < this.tripPoints.length; i++) {
-      render(new TripPointView(this.tripPoints[i]), this.tripComponent.getElement());
-    }
+    render (
+      new FormEditTemplate({
+        point: this.points[0],
+        pointDestinations: this.destinationsModel.get(),
+        pointOffers: this.offersModel.get()
+      }),
+      this.tripComponent.getElement()
+    );
+
+    this.points.forEach((point) => {
+      render (
+        new TripPointView({
+          point,
+          pointDestinations: this.destinationsModel.getById(point.destination),
+          pointOffers: this.offersModel.getByType(point.type)
+        }),
+      );
+    });
   }
 }

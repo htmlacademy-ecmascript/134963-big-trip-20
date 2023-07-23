@@ -1,6 +1,8 @@
 import { createElement } from '../render.js';
+import {POINT_EMPLY} from '../mock/const.js';
 
-function editFormTemplate() {
+function editFormTemplate({point, pointDestination, pointOffer}) {
+
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -128,7 +130,7 @@ function editFormTemplate() {
               id="event-destination-1" 
               type="text" 
               name="event-destination" 
-              value="Geneva" 
+              value=${destination.name} 
               list="destination-list-1"
             >
             <datalist id="destination-list-1">
@@ -246,15 +248,11 @@ function editFormTemplate() {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+            <p class="event__destination-description">${destination.description}</p>
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
-                <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-                <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+              ${destination.pictures.src}
               </div>
             </div>
           </section>
@@ -265,8 +263,19 @@ function editFormTemplate() {
 }
 
 export default class FormEditTemplate {
+
+  constructor({point = POINT_EMPLY, pointDestination, pointOffer}) {
+    this.point = point;
+    this.pointDestination = pointDestination;
+    this.pointOffer = pointOffer;
+  }
+
   getTemplate() {
-    return editFormTemplate();
+    return editFormTemplate({
+      point: this.point,
+      pointDestination: this.pointDestination,
+      pointOffer: this.pointOffer
+    });
   }
 
   getElement() {
