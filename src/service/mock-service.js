@@ -6,15 +6,15 @@ import { TYPEARRAY } from '../mock/const.js';
 
 import { getRandomInteger, getRandomArrayElement} from '../mock/utils.js';
 
-export default class MockServive {
+export default class MockService {
   destinations = [];
   offers = [];
   points = [];
 
   constructor() {
-    this.destinations = this.generateMockDestinations();
-    this.points = this.generateMockPoints();
-    this.offers = this.generateMockOffers();
+    this.destinations = this.generateDestinations();
+    this.points = this.generatePoints();
+    this.offers = this.generateOffers();
   }
 
   getDestination(){
@@ -29,21 +29,21 @@ export default class MockServive {
     return this.points;
   }
 
-  generateMockDestinations() {
+  generateDestinations() {
     return Array.from(
       {length:5},
       () => generateMockDestinations()
     );
   }
 
-  generateMockOffers() {
+  generateOffers() {
     return TYPEARRAY.map((type) => ({
       type,
       offers: Array.from({length:getRandomInteger(0, 5)}, () => generateMockOffers(type))
     }));
   }
 
-  generateMockPoints() {
+  generatePoints() {
     return Array.from({length: 5}, () => {
       const type = getRandomArrayElement(TYPEARRAY);
       const destination = getRandomArrayElement(this.destinations);
