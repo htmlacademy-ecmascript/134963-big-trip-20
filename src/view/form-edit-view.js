@@ -1,7 +1,7 @@
 import { createElement } from '../render.js';
 import {POINT_EMPLY} from '../mock/const.js';
 
-function editFormTemplate({point, pointDestination, pointOffer}) {
+function editFormTemplate() {
 
   return (
     `<li class="trip-events__item">
@@ -130,7 +130,7 @@ function editFormTemplate({point, pointDestination, pointOffer}) {
               id="event-destination-1" 
               type="text" 
               name="event-destination" 
-              value=${destination.name} 
+              value=$destination.name 
               list="destination-list-1"
             >
             <datalist id="destination-list-1">
@@ -248,11 +248,11 @@ function editFormTemplate({point, pointDestination, pointOffer}) {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${destination.description}</p>
+            <p class="event__destination-description">$destination.description</p>
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
-              ${destination.pictures.src}
+              $destination.pictures.src
               </div>
             </div>
           </section>

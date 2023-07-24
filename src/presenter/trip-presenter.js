@@ -37,6 +37,7 @@ export default class TripPresenter {
           pointDestinations: this.destinationsModel.getById(point.destination),
           pointOffers: this.offersModel.getByType(point.type)
         }),
+        this.tripComponent.getElement()
       );
     });
   }
