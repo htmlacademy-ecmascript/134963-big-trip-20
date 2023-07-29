@@ -1,33 +1,15 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import {Duration} from './const.js';
 
-const DATE_FORMAT = 'YYYY-MM-DD';
-const EVENT_DATE = 'MMM D';
-const TIME_FORMAT = 'hh mm';
+dayjs.extend(duration);
+
+function humanizeTripDueDate(dueDate, dateFrom) {
+  return dueDate ? dayjs(dueDate).format(dateFrom) : '';
+}
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
-}
-
-function humanizeYearDueData(dueDate) {
-  return dueDate ? dayjs(dueDate).format(DATE_FORMAT) : '';
-}
-
-function humanizePointDueDate(dueDate) {
-  return dueDate ? dayjs(dueDate).format(EVENT_DATE) : '';
-}
-
-//Функция для часового перевода
-function humanizeTimeDueData(dueDate) {
-  return dueDate ? dayjs(dueDate).format(TIME_FORMAT) : '';
-}
-
-function getDiffData(dueData1, dueData2) {
-  const firstData = dayjs(dueData1);
-  const secondData = dayjs(dueData2);
-
-  //метод diff вычисляет разницу между двумя датами.
-  return secondData.diff(firstData);
 }
 
 function getDate({next}) {
@@ -41,8 +23,7 @@ function getDate({next}) {
     date = dayjs(date)
       .add(minsGap, 'minute')
       .add(hoursGap, 'hour')
-      .add(daysGap, 'day')
-      .toDate();
+      .add(daysGap, 'day');
   }
 
   return date;
@@ -55,4 +36,33 @@ function getRandomInteger(a, b) {
   return Math.floor(result);
 }
 
-export {getRandomArrayElement, getRandomInteger, humanizePointDueDate, humanizeTimeDueData, humanizeYearDueData, getDiffData, getDate};
+function dateDiff (date1, date2){
+  let answer = '';
+  const dateDifferent = date1.diff(date2, 'm');
+  const dateDay = Math.floor(dateDifferent / 1440);
+  const answerH = dateDifferent - dateDay * 1440;
+  const dateHour = Math.floor(answerH / 60);
+  const dateMinute = answerH - dateHour * 60;
+  if (dateDifferent < 0) {
+    return 'wrong date';
+  } else {
+    if (dateDay !== 0) {
+      answer = `${dateDay}d `;
+    }
+    if (dateHour !== 0) {
+      answer += `${dateHour}h ` ;
+    }
+    if (dateMinute !== 0) {
+      answer += `${dateMinute}m` ;
+    }
+    return answer;
+  }
+}
+
+export {
+  getRandomArrayElement,
+  getRandomInteger,
+  humanizeTripDueDate,
+  dateDiff,
+  getDate
+};

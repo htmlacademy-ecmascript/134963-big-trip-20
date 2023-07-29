@@ -13,6 +13,14 @@ const CTTIES = ['Rubcovsk', 'Novosibirsk', 'Barnaul', 'Moscow', 'London', 'Rome'
 
 const DEFAULT_TYPE = 'flight';
 
+const DATE_FORMAT = {
+  HOUR_MINUTES: 'H:mm',
+  MONTH_DAY : 'MMM D',
+  YEAR_MONTH_DAY: 'YY-MM-DD',
+  YEAR_MONTH_DAY_TIME: 'YYYY-MM-DDTHH:mm',
+  DAY_MONTH_YEAR_TIME_SLASHED: 'DD/MM/YY HH:mm'
+};
+
 const POINT_EMPLY = {
   basePrice: 0,
   dateFrom: null,
@@ -25,9 +33,9 @@ const POINT_EMPLY = {
 
 const Duration = {
   MIN: 59,
-  DAY: 5,
-  HOUR: 5
+  DAY: 7,
+  HOUR: 23
 };
 
-export {TYPEARRAY, DESCRIPTIONS, CTTIES, POINT_EMPLY, Duration};
+export {TYPEARRAY, DESCRIPTIONS, CTTIES, POINT_EMPLY, DATE_FORMAT, Duration};
 

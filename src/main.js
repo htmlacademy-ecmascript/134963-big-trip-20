@@ -1,7 +1,7 @@
 import NewTaskButtonView from './view/new-task-button-view.js';
 import { render, RenderPosition } from './render.js';
 import FilterView from './view/filter-view.js';
-import TripInfo from './view/trip-info.js';
+import TripInfoView from './view/trip-info-view.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import PointsModel from './model/points-model.js';
 import OffersModel from './model/offers-model.js';
@@ -20,13 +20,13 @@ const destinationsModel = new DestinationsModel(mockService);
 
 const tripPresenter = new TripPresenter({
   tripContainer: tripContainer,
+  destinationsModel,
   pointsModel,
   offersModel,
-  destinationsModel
 });
 
 
-render(new TripInfo(), tripMainElement, RenderPosition.AFTERBEGIN);
+render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
 render(new FilterView(), tripFilters);
 render(new NewTaskButtonView(), tripMainElement);
 tripPresenter.init();

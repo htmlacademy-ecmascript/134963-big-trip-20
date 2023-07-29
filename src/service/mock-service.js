@@ -12,7 +12,7 @@ export default class MockService {
   points = [];
 
   constructor() {
-    this.destinations = this.generateDestinations();
+    this.destinations = this.generateDestination();
     this.offers = this.generateOffers();
     this.points = this.generatePoints();
   }
@@ -29,7 +29,7 @@ export default class MockService {
     return this.points;
   }
 
-  generateDestinations() {
+  generateDestination() {
     return Array.from(
       {length:5},
       () => generateMockDestinations()
