@@ -1,4 +1,4 @@
-const TYPEARRAY = [ 'taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant' ];
+const TYPES = [ 'taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant' ];
 
 const DESCRIPTIONS = [
   'Здесь много интересных и красивых мест, разных памятников.',
@@ -37,5 +37,5 @@ const Duration = {
   HOUR: 23
 };
 
-export {TYPEARRAY, DESCRIPTIONS, CTTIES, POINT_EMPLY, DATE_FORMAT, Duration};
+export {TYPES, DESCRIPTIONS, CTTIES, POINT_EMPLY, DATE_FORMAT, Duration};
 
