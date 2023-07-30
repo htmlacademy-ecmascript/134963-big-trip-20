@@ -1,8 +1,5 @@
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
 import {Duration} from './const.js';
-
-dayjs.extend(duration);
 
 const humanizeTripDueDate = (dueDate, dateFrom) => dueDate ? dayjs(dueDate).format(dateFrom) : '';
 
