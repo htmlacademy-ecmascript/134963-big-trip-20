@@ -4,15 +4,18 @@ import {Duration} from './const.js';
 
 dayjs.extend(duration);
 
-function humanizeTripDueDate(dueDate, dateFrom) {
-  return dueDate ? dayjs(dueDate).format(dateFrom) : '';
-}
+const humanizeTripDueDate = (dueDate, dateFrom) => dueDate ? dayjs(dueDate).format(dateFrom) : '';
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
+const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 
-function getDate({next}) {
+const getRandomInteger = (a, b) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
+};
+
+const getDate = ({next}) => {
   let date = dayjs().subtract(getRandomInteger(0, Duration.DAY), 'day').toDate();
 
   const minsGap = getRandomInteger(0, Duration.MIN);
@@ -27,16 +30,9 @@ function getDate({next}) {
   }
 
   return date;
-}
+};
 
-function getRandomInteger(a, b) {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-}
-
-function dateDiff (date1, date2){
+const dateDiff = (date1, date2) => {
   let answer = '';
   const dateDifferent = date1.diff(date2, 'm');
   const dateDay = Math.floor(dateDifferent / 1440);
@@ -57,7 +53,7 @@ function dateDiff (date1, date2){
     }
     return answer;
   }
-}
+};
 
 export {
   getRandomArrayElement,

@@ -12,7 +12,7 @@ function createOffersListTemplate(offers) {
   const offersTemplates = [];
   for (let i = 0; i < offers.length; i++) {
     const currentOffer = offers[i];
-    const check = !!offers.find((item) => item === currentOffer.id);
+    const check = !offers.find((item) => item === currentOffer.id);
     const checked = check ? 'checked' : '';
     offersTemplates.push(`<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-mockid-${currentOffer.id}" type="checkbox" name="event-offer-mockid-${currentOffer.id}" ${checked}>
