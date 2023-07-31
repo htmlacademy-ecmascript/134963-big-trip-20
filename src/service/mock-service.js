@@ -2,9 +2,9 @@ import { generateMockPoints } from '../mock/points.js';
 import { generateMockDestinations } from '../mock/destinations.js';
 import { generateMockOffers } from '../mock/offers.js';
 
-import { TYPES } from '../mock/const.js';
+import { TYPES } from '../const.js';
 
-import { getRandomInteger, getRandomArrayElement} from '../mock/utils.js';
+import { getRandomInteger, getRandomArrayElement} from '../utils.js';
 
 export default class MockService {
   destinations = [];

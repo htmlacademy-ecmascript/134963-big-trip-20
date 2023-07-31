@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import {POINT_EMPLY} from '../mock/const.js';
+import {POINT_EMPTY} from '../const.js';
 
 function editFormTemplate() {
 
@@ -264,7 +264,7 @@ function editFormTemplate() {
 
 export default class FormEditTemplate {
 
-  constructor({point = POINT_EMPLY, pointDestination, pointOffer}) {
+  constructor({point = POINT_EMPTY, pointDestination, pointOffer}) {
     this.point = point;
     this.pointDestination = pointDestination;
     this.pointOffer = pointOffer;

@@ -1,10 +1,10 @@
 import { createElement } from '../render.js';
-import { DATE_FORMAT } from '../mock/const.js';
+import { DATE_FORMAT } from '../const.js';
 import
 {
   humanizeTripDueDate,
   dateDiff
-} from '../mock/utils.js';
+} from '../utils.js';
 
 
 function createViewOffersList(offers) {

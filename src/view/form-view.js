@@ -1,40 +1,39 @@
 import { createElement } from '../render.js';
-import { humanizeTripDueDate } from '../mock/utils.js';
-import { POINT_EMPLY, DATE_FORMAT } from '../mock/const.js';
+import { humanizeTripDueDate } from '../utils.js';
+import { POINT_EMPTY, DATE_FORMAT } from '../const.js';
 
-function createViewDectinationPhoto(photos) {
-  const photoList = photos.map((photo) =>
-    `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('');
+function createViewDestinationPhoto(photos) {
+  const photoList = photos.map((photo) => (
+    `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)).join('');
+
   return `<div class="event__photos-tape">${photoList}</div>`;
 }
 
 function createOffersListTemplate(offers) {
-  const offersTemplates = [];
-  for (let i = 0; i < offers.length; i++) {
-    const currentOffer = offers[i];
-    const check = !offers.find((item) => item === currentOffer.id);
-    const checked = check ? 'checked' : '';
-    offersTemplates.push(`<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-mockid-${currentOffer.id}" type="checkbox" name="event-offer-mockid-${currentOffer.id}" ${checked}>
-    <label class="event__offer-label" for="event-offer-mockid-${currentOffer.id}">
-      <span class="event__offer-title">${currentOffer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${currentOffer.price}</span>
-    </label>
-  </div>`);
-  }
-  return offersTemplates.join('');
+  return offers.map((currentOffer) => {
+    const isChecked = !offers.find((item) => item === currentOffer.id);
+    const checked = isChecked ? 'checked' : '';
+
+    return (
+      `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-mockid-${currentOffer.id}" type="checkbox" name="event-offer-mockid-${currentOffer.id}" ${checked}>
+        <label class="event__offer-label" for="event-offer-mockid-${currentOffer.id}">
+          <span class="event__offer-title">${currentOffer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${currentOffer.price}</span>
+        </label>
+       </div>`
+    );
+  }).join('');
+
 }
 
-
-function createFormTemplate({ point = POINT_EMPLY, pointDestination, pointOffer }) {
+function createFormTemplate({ point = POINT_EMPTY, pointDestination, pointOffer }) {
   const { dateFrom, dateTo, type, basePrice } = point;
-  const pointTitle = point.destination;
   const pointType = point.type;
   const offersByType = pointOffer.find((item) => item.type === pointType).offers;
-  const description = pointDestination.find((destination) => destination.id === pointTitle).description;
-  const pictures = pointDestination.find((destination) => destination.id === pointTitle).pictures;
-  const city = pointDestination.find((destination) => destination.id === pointTitle).name;
+  const currentDestination = pointDestination.find((destination) => destination.id === point.destination);
+
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -158,7 +157,7 @@ function createFormTemplate({ point = POINT_EMPLY, pointDestination, pointOffer 
               id="event-destination-1" 
               type="text" 
               name="event-destination" 
-              value="${city}" 
+              value="${currentDestination.name}" 
               list="destination-list-1"
             >
             <datalist id="destination-list-1">
@@ -209,19 +208,18 @@ function createFormTemplate({ point = POINT_EMPLY, pointDestination, pointOffer 
           <section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
-            <div class="event__available-offers">
-                            ${createOffersListTemplate(offersByType)}
+          <div class="event__available-offers">
+            ${createOffersListTemplate(offersByType)}
+          </div>
           </section>
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${description}</p>
+            <p class="event__destination-description">${currentDestination.description}</p>
 
             <div class="event__photos-container">
-              ${createViewDectinationPhoto(pictures)}
-              </div>
-                       
-            </div>
+              ${createViewDestinationPhoto(currentDestination.pictures)}
+            </div>     
           </section>
         </section>
       </form>
@@ -230,7 +228,7 @@ function createFormTemplate({ point = POINT_EMPLY, pointDestination, pointOffer 
 }
 
 export default class FormCreateView {
-  constructor({ point = POINT_EMPLY, pointDestination, pointOffer }) {
+  constructor({ point = POINT_EMPTY, pointDestination, pointOffer }) {
     this.point = point;
     this.pointDestination = pointDestination;
     this.pointOffer = pointOffer;

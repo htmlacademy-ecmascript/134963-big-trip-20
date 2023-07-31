@@ -1,4 +1,4 @@
-import { getRandomInteger, getDate} from './utils.js';
+import { getRandomInteger, getDate} from '../utils.js';
 
 
 const generateMockPoints = (type, destinationId, offerIds) => ({

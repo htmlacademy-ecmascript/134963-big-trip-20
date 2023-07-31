@@ -1,6 +1,6 @@
 import TripPointView from '../view/trip-point-view.js';
 import TripPointsListView from '../view/trip-point-list-view.js';
-import FormCreateView from '../view/form-create-view.js';
+import FormCreateView from '../view/form-view.js';
 import SortView from '../view/sort-view.js';
 import { render } from '../render.js';
 

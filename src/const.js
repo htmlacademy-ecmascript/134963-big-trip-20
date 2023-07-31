@@ -9,7 +9,7 @@ const DESCRIPTIONS = [
   'Идеальное место для тихого отдыха.'
 ];
 
-const CTTIES = ['Rubcovsk', 'Novosibirsk', 'Barnaul', 'Moscow', 'London', 'Rome', 'Saint-Petersburg'];
+const CITES = ['Rubcovsk', 'Novosibirsk', 'Barnaul', 'Moscow', 'London', 'Rome', 'Saint-Petersburg'];
 
 const DEFAULT_TYPE = 'flight';
 
@@ -21,7 +21,7 @@ const DATE_FORMAT = {
   DAY_MONTH_YEAR_TIME_SLASHED: 'DD/MM/YY HH:mm'
 };
 
-const POINT_EMPLY = {
+const POINT_EMPTY = {
   basePrice: 0,
   dateFrom: null,
   dateTo: null,
@@ -37,5 +37,5 @@ const Duration = {
   HOUR: 23
 };
 
-export {TYPES, DESCRIPTIONS, CTTIES, POINT_EMPLY, DATE_FORMAT, Duration};
+export {TYPES, DESCRIPTIONS, CITES, POINT_EMPTY, DATE_FORMAT, Duration};
 
