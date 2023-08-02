@@ -2,20 +2,19 @@ import { createElement } from '../render.js';
 import { humanizeTripDueDate, capitalizeFirstLetter } from '../utils.js';
 import { POINT_EMPTY, DATE_FORMAT } from '../const.js';
 
-function createViewDestinationPhoto(photos) {
+const createViewDestinationPhoto = (photos) => {
   const photoList = photos.map((photo) => (
     `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)).join('');
 
   return `<div class="event__photos-tape">${photoList}</div>`;
-}
+};
 
-function createOffersListTemplate(offers) {
-  return offers.map((currentOffer) => {
-    const isChecked = !offers.includes(currentOffer.id);
-    const checked = isChecked ? 'checked' : '';
+const createOffersListTemplate = (offers) => offers.map((currentOffer) => {
+  const isChecked = !offers.includes(currentOffer.id);
+  const checked = isChecked ? 'checked' : '';
 
-    return (
-      `<div class="event__offer-selector">
+  return (
+    `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-mockid-${currentOffer.id}" type="checkbox" name="event-offer-mockid-${currentOffer.id}" ${checked}>
         <label class="event__offer-label" for="event-offer-mockid-${currentOffer.id}">
           <span class="event__offer-title">${currentOffer.title}</span>
@@ -23,12 +22,10 @@ function createOffersListTemplate(offers) {
           <span class="event__offer-price">${currentOffer.price}</span>
         </label>
        </div>`
-    );
-  }).join('');
+  );
+}).join('');
 
-}
-
-function createTypesListTemplate(offerTypes, type) {
+const createTypesListTemplate = (offerTypes, type) => {
   const offerType = (offerTypes.length === 0) ? '' :
     offerTypes.map((item) => (
       `<div class="event__type-item">
@@ -56,9 +53,9 @@ function createTypesListTemplate(offerTypes, type) {
               ${offerType}
         </div>
      </div>`);
-}
+};
 
-function createFormTemplate({ point = POINT_EMPTY, pointDestination, pointOffer }) {
+const createFormTemplate = ({ point = POINT_EMPTY, pointDestination, pointOffer }) => {
   const { dateFrom, dateTo, type, basePrice } = point;
   const offersByType = pointOffer.find((item) => item.type === point.type).offers;
   const currentDestination = pointDestination.find((destination) => destination.id === point.destination);
@@ -145,7 +142,7 @@ function createFormTemplate({ point = POINT_EMPTY, pointDestination, pointOffer 
       </form>
     </li>`
   );
-}
+};
 
 export default class FormCreateView {
   constructor({ point = POINT_EMPTY, pointDestination, pointOffer }) {

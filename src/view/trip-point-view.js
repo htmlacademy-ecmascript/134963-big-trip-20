@@ -7,7 +7,7 @@ import
 } from '../utils.js';
 
 
-function createViewOffersList(offers) {
+const createViewOffersList = (offers) => {
   const offersList = offers.offers.map((offer) =>
     `<li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
@@ -15,7 +15,7 @@ function createViewOffersList(offers) {
             <span class="event__offer-price">${offer.price}</span>
       </li>`).join('');
   return `<ul class="event__selected-offers">${offersList}</ul>`;
-}
+};
 
 const createTripPoint = ({ point, pointDestination, pointOffer }) => {
   const { dateFrom, dateTo, type, basePrice, isFavorite } = point;
