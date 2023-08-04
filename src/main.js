@@ -1,5 +1,4 @@
 import NewTaskButtonView from './view/new-task-button-view.js';
-import { render, RenderPosition } from './render.js';
 import FilterView from './view/filter-view.js';
 import TripInfoView from './view/trip-info-view.js';
 import TripPresenter from './presenter/trip-presenter.js';
@@ -7,6 +6,7 @@ import PointsModel from './model/points-model.js';
 import OffersModel from './model/offers-model.js';
 import DestinationsModel from './model/destination-model.js';
 import MockService from './service/mock-service.js';
+import { render} from './framework/render.js';
 
 
 const tripContainer = document.querySelector('.trip-events');
@@ -26,7 +26,7 @@ const tripPresenter = new TripPresenter({
 });
 
 
-render(new TripInfoView(), tripMainElement, RenderPosition.AFTERBEGIN);
+render(new TripInfoView(), tripMainElement);
 render(new FilterView(), tripFilters);
 render(new NewTaskButtonView(), tripMainElement);
 tripPresenter.init();
