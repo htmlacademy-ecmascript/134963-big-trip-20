@@ -150,7 +150,6 @@ export default class FormCreateView extends AbstractView{
   #pointDestination = null;
   #pointOffer = null;
   #handleFormSubmit = null;
-  #handleToggleClick = null;
   #handleDeleteClick = null;
 
 
