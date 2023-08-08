@@ -37,5 +37,20 @@ const Duration = {
   HOUR: 23
 };
 
-export {TYPES, DESCRIPTIONS, CITES, POINT_EMPTY, DATE_FORMAT, Duration};
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};
+
+export {
+  TYPES,
+  DESCRIPTIONS,
+  CITES,
+  POINT_EMPTY,
+  DATE_FORMAT,
+  Duration,
+  FilterType
+};
 

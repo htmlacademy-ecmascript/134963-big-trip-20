@@ -4,7 +4,7 @@ import { generateMockOffers } from '../mock/offers.js';
 
 import { TYPES } from '../const.js';
 
-import { getRandomInteger, getRandomArrayElement} from '../utils.js';
+import { getRandomInteger, getRandomArrayElement} from '../utils/common.js';
 
 export default class MockService {
   destinations = [];

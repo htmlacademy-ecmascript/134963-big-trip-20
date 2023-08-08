@@ -4,7 +4,7 @@ import
 {
   humanizeTripDueDate,
   dateDiff
-} from '../utils.js';
+} from '../utils/utils.js';
 
 
 const createViewOffersList = (offers) => {
@@ -71,12 +71,16 @@ export default class TripPointView extends AbstractView {
   #point = null;
   #pointDestination = null;
   #pointOffer = null;
+  #handleFormClick = null;
 
-  constructor({ point, pointDestination, pointOffer }) {
+  constructor({ point, pointDestination, pointOffer, onFormClick }) {
     super();
     this.#point = point;
     this.#pointDestination = pointDestination;
     this.#pointOffer = pointOffer;
+    this.#handleFormClick = onFormClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickFormHandler);
+
   }
 
   get template() {
@@ -86,4 +90,9 @@ export default class TripPointView extends AbstractView {
       pointOffer: this.#pointOffer
     });
   }
+
+  #clickFormHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormClick();
+  };
 }

@@ -6,6 +6,7 @@ import PointsModel from './model/points-model.js';
 import OffersModel from './model/offers-model.js';
 import DestinationsModel from './model/destination-model.js';
 import MockService from './service/mock-service.js';
+import { generateFilter } from './mock/filter.js';
 import { render} from './framework/render.js';
 
 
@@ -17,6 +18,7 @@ const mockService = new MockService();
 const pointsModel = new PointsModel(mockService);
 const offersModel = new OffersModel(mockService);
 const destinationsModel = new DestinationsModel(mockService);
+const filters = generateFilter(mockService.points);
 
 const tripPresenter = new TripPresenter({
   tripContainer: tripContainer,
@@ -27,6 +29,6 @@ const tripPresenter = new TripPresenter({
 
 
 render(new TripInfoView(), tripMainElement);
-render(new FilterView(), tripFilters);
+render(new FilterView({filters}), tripFilters);
 render(new NewTaskButtonView(), tripMainElement);
 tripPresenter.init();

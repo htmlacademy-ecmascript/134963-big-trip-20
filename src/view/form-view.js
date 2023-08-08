@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeTripDueDate, capitalizeFirstLetter } from '../utils.js';
+import { humanizeTripDueDate } from '../utils/utils.js';
 import { POINT_EMPTY, DATE_FORMAT } from '../const.js';
+import {capitalizeFirstLetter} from '../utils/common.js';
 
 const createViewDestinationPhoto = (photos) => {
   const photoList = photos.map((photo) => (
@@ -148,12 +149,22 @@ export default class FormCreateView extends AbstractView{
   #point = null;
   #pointDestination = null;
   #pointOffer = null;
+  #handleFormSubmit = null;
+  #handleToggleClick = null;
+  #handleDeleteClick = null;
 
-  constructor({ point = POINT_EMPTY, pointDestination, pointOffer }) {
+
+  constructor({ point = POINT_EMPTY, pointDestination, pointOffer, onFormSubmit, onDeleteClick}) {
     super();
     this.#point = point;
     this.#pointDestination = pointDestination;
     this.#pointOffer = pointOffer;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
+
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+
   }
 
   get template() {
@@ -163,4 +174,16 @@ export default class FormCreateView extends AbstractView{
       pointOffer: this.#pointOffer
     });
   }
+
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
+
+  #deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick();
+  };
 }
+
