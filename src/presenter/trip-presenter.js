@@ -81,6 +81,10 @@ export default class TripPresenter {
           document.removeEventListener('keydown', escKeyDownHandler);
           removeForm();
         },
+        onToggleClick: () => {
+          replaceFromFormToItem();
+          document.removeEventListener('keydown', escKeyDownHandler);
+        },
       }
     );
 
