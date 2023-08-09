@@ -30,7 +30,6 @@ export default class TripInfoView extends AbstractView {
     super();
     this.#points = points;
 
-    console.log(this.#points);
   }
 
   get template() {

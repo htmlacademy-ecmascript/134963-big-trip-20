@@ -121,6 +121,7 @@ const createFormTemplate = ({ point = POINT_EMPTY, pointDestination, pointOffer 
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__rollup-btn" type="button">
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
@@ -151,18 +152,22 @@ export default class FormCreateView extends AbstractView{
   #pointOffer = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
+  #handleToggleClick = null;
 
 
-  constructor({ point = POINT_EMPTY, pointDestination, pointOffer, onFormSubmit, onDeleteClick}) {
+  constructor({ point = POINT_EMPTY, pointDestination, pointOffer, onFormSubmit, onDeleteClick, onToggleClick}) {
     super();
     this.#point = point;
     this.#pointDestination = pointDestination;
     this.#pointOffer = pointOffer;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
+    this.#handleToggleClick = onToggleClick;
+
 
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#toggleClickHandler);
 
   }
 
@@ -183,6 +188,11 @@ export default class FormCreateView extends AbstractView{
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleDeleteClick();
+  };
+
+  #toggleClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleToggleClick();
   };
 }
 

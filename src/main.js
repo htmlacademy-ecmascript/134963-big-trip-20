@@ -19,6 +19,7 @@ const pointsModel = new PointsModel(mockService);
 const offersModel = new OffersModel(mockService);
 const destinationsModel = new DestinationsModel(mockService);
 const filters = generateFilter(mockService.points);
+const info = mockService.points;
 
 const tripPresenter = new TripPresenter({
   tripContainer: tripContainer,
@@ -28,7 +29,7 @@ const tripPresenter = new TripPresenter({
 });
 
 
-render(new TripInfoView(), tripMainElement);
+render(new TripInfoView(mockService), tripMainElement);
 render(new FilterView({filters}), tripFilters);
 render(new NewTaskButtonView(), tripMainElement);
 tripPresenter.init();
