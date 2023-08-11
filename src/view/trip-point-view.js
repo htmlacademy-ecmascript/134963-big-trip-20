@@ -73,12 +73,13 @@ export default class TripPointView extends AbstractView {
   #pointOffer = null;
   #handleFormClick = null;
 
-  constructor({ point, pointDestination, pointOffer, onFormClick }) {
+  constructor({ point, pointDestination, pointOffer, onEditClick }) {
     super();
     this.#point = point;
     this.#pointDestination = pointDestination;
     this.#pointOffer = pointOffer;
-    this.#handleFormClick = onFormClick;
+    this.#handleFormClick = onEditClick;
+
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickFormHandler);
 
   }

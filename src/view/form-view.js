@@ -146,7 +146,7 @@ const createFormTemplate = ({ point = POINT_EMPTY, pointDestination, pointOffer 
   );
 };
 
-export default class FormCreateView extends AbstractView{
+export default class FormView extends AbstractView{
   #point = null;
   #pointDestination = null;
   #pointOffer = null;
