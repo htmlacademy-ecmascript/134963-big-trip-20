@@ -1,6 +1,7 @@
-import { createElement } from '../render.js';
-import { humanizeTripDueDate, capitalizeFirstLetter } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizeTripDueDate } from '../utils/utils.js';
 import { POINT_EMPTY, DATE_FORMAT } from '../const.js';
+import {capitalizeFirstLetter} from '../utils/common.js';
 
 const createViewDestinationPhoto = (photos) => {
   const photoList = photos.map((photo) => (
@@ -120,6 +121,7 @@ const createFormTemplate = ({ point = POINT_EMPTY, pointDestination, pointOffer 
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__rollup-btn" type="button">
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
@@ -144,30 +146,53 @@ const createFormTemplate = ({ point = POINT_EMPTY, pointDestination, pointOffer 
   );
 };
 
-export default class FormCreateView {
-  constructor({ point = POINT_EMPTY, pointDestination, pointOffer }) {
-    this.point = point;
-    this.pointDestination = pointDestination;
-    this.pointOffer = pointOffer;
+export default class FormView extends AbstractView{
+  #point = null;
+  #pointDestination = null;
+  #pointOffer = null;
+  #handleFormSubmit = null;
+  #handleDeleteClick = null;
+  #handleToggleClick = null;
+
+
+  constructor({ point = POINT_EMPTY, pointDestination, pointOffer, onFormSubmit, onDeleteClick, onToggleClick}) {
+    super();
+    this.#point = point;
+    this.#pointDestination = pointDestination;
+    this.#pointOffer = pointOffer;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
+    this.#handleToggleClick = onToggleClick;
+
+
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#toggleClickHandler);
+
   }
 
-  getTemplate() {
+  get template() {
     return createFormTemplate({
-      point: this.point,
-      pointDestination: this.pointDestination,
-      pointOffer: this.pointOffer
+      point: this.#point,
+      pointDestination: this.#pointDestination,
+      pointOffer: this.#pointOffer
     });
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
 
-    return this.element;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 
-  removeElement() {
-    this.element = null;
-  }
+  #deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick();
+  };
+
+  #toggleClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleToggleClick();
+  };
 }
+
