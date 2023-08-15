@@ -2,7 +2,9 @@ import TripPointsListView from '../view/trip-point-list-view.js';
 import SortView from '../view/sort-view.js';
 import EmptyView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
+import { updateItem } from '../utils/common.js';
 import { render, remove, replace } from '../framework/render.js';
+
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -15,7 +17,7 @@ export default class TripPresenter {
   #tripComponent = new TripPointsListView();
   #sortComponent = new SortView();
 
-  #pointPresenter = new Map();
+  #pointPresenters = new Map();
 
   constructor({ tripContainer, pointsModel, offersModel, destinationsModel }) {
     this.#tripContainer = tripContainer;
@@ -59,7 +61,17 @@ export default class TripPresenter {
 
     pointPresenter.init(point);
 
-    this.#pointPresenter.set(point.id, pointPresenter);
+    this.#pointPresenters.set(point.id, pointPresenter);
+  }
+
+  #handlePointUpdate = (updatedPoint) => {
+    this.#points = updateItem(this.#points, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #clearPointList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
   }
 }
 
