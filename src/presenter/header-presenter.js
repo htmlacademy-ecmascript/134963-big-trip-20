@@ -7,13 +7,15 @@ import { render, RenderPosition } from '../framework/render';
 
 export default class HeaderPresenter {
   #headerContainer = null;
+  #filterContainer = null;
 
   #filters = [];
 
   #pointsModel = null;
 
-  constructor ({headerContainer, pointsModel}) {
+  constructor ({headerContainer, pointsModel, filterContainer}) {
     this.#headerContainer = headerContainer;
+    this. #filterContainer = filterContainer;
 
     this.#pointsModel = pointsModel;
     this.#filters = generateFilter(this.#pointsModel.points);
@@ -28,7 +30,7 @@ export default class HeaderPresenter {
   }
 
   #renderTripInfoView() {
-    render(new TripInfoView(), this.#headerContainer);
+    render(new TripInfoView(), this.#headerContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderNewTaskButtonView() {
@@ -36,6 +38,6 @@ export default class HeaderPresenter {
   }
 
   #renderFilters() {
-    render(new FilterView({ filters: this.#filters }), this.#headerContainer, RenderPosition.AFTERBEGIN);
+    render(new FilterView({ filters: this.#filters }), this.#filterContainer);
   }
 }
