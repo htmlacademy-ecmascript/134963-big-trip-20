@@ -9,6 +9,7 @@ import MockService from './service/mock-service.js';
 
 const tripContainer = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
+const tripFilterContainer = document.querySelector('.trip-controls__filters');
 
 const mockService = new MockService();
 const pointsModel = new PointsModel(mockService);
@@ -24,9 +25,8 @@ const tripPresenter = new TripPresenter({
 
 const headerPresenter = new HeaderPresenter({
   headerContainer: tripMainElement,
-  destinationsModel,
   pointsModel,
-  offersModel,
+  filterContainer: tripFilterContainer,
 });
 
 

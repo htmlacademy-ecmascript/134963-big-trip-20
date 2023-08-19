@@ -103,6 +103,5 @@ export default class TripPointView extends AbstractView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleFavoriteClick();
-    this.favoriteButton.classList.toggle('event__favorite-btn--active');
   };
 }
