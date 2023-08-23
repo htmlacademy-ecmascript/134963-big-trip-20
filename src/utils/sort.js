@@ -9,4 +9,9 @@ function calculateDateRangeDifference(point1, point2) {
   return durationPoint2 - durationPoint1;
 }
 
-export{comparePointPrice, calculateDateRangeDifference};
+function sortByDateFrom(point1, point2) {
+  const date1 = new Date(point1.dateFrom);
+  const date2 = new Date(point2.dateFrom);
+  return date1 - date2;
+}
+export{comparePointPrice, calculateDateRangeDifference, sortByDateFrom};

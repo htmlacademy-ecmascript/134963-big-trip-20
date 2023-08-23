@@ -3,7 +3,7 @@ import SortView from '../view/sort-view.js';
 import EmptyView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import { SortType } from '../const.js';
-import { comparePointPrice, calculateDateRangeDifference } from '../utils/sort.js';
+import { comparePointPrice, calculateDateRangeDifference, sortByDateFrom } from '../utils/sort.js';
 import { updateItem } from '../utils/common.js';
 import { render} from '../framework/render.js';
 
@@ -93,6 +93,9 @@ export default class TripPresenter {
         break;
       case SortType.PRICE_DOWN:
         this.#points.sort(comparePointPrice);
+        break;
+      case SortType.DEFAULT:
+        this.#points.sort(sortByDateFrom);
         break;
       default:
         this.#points = [...this.#sourcedPoints];
