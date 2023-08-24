@@ -52,7 +52,7 @@ export default class TripPresenter {
     this.#sortComponent = new SortView({
       onSortTypeChange: this.#handleSortTypeChange
     });
-
+    this.#points.sort(sortByDateFrom);
     render(this.#sortComponent, this.#tripContainer);
   }
 
