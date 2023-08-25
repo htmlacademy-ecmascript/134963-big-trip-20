@@ -35,7 +35,7 @@ const createSortTemplate = () => (
           type="radio" 
           name="trip-sort" 
           value="sort-time"
-          data-sort-type="${SortType.TIME_DOWN}"
+          data-sort-type="${SortType.TIME_DESC}"
         >
         <label class="trip-sort__btn" for="sort-time">Time</label>
       </div>
@@ -47,7 +47,7 @@ const createSortTemplate = () => (
           type="radio" 
           name="trip-sort" 
           value="sort-price"
-          data-sort-type="${SortType.PRICE_DOWN}"
+          data-sort-type="${SortType.PRICE_DESC}"
           checked
         >
         <label class="trip-sort__btn" for="sort-price">Price</label>
@@ -73,14 +73,10 @@ export default class SortView extends AbstractView {
   constructor({ onSortTypeChange }) {
     super();
     this.#handleSortTypeChange = onSortTypeChange;
-    this.element.addEventListener('click', this.#sortTypeChangeHandler);
+    this.element.addEventListener('change', this.#sortTypeChangeHandler);
   }
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'INPUT') {
-      return;
-    }
-
     //evt.preventDefault();
     this.#handleSortTypeChange(evt.target.dataset.sortType);
   };

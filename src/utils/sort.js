@@ -1,17 +1,19 @@
-function comparePointPrice(point1, point2) {
-  return point1.basePrice - point2.basePrice;
+import dayjs from 'dayjs';
+
+function sortByPriceDesc (point1, point2) {
+  return point2.basePrice - point1.basePrice;
 }
 
-function calculateDateRangeDifference(point1, point2) {
-  const durationPoint1 = point1.dateTo - point1.dateFrom;
-  const durationPoint2 = point2.dateTo - point2.dateFrom;
+function sortByTimeDesc(point1, point2) {
+  const durationPoint1 = dayjs(point1.dateTo).valueOf() - dayjs(point1.dateFrom).valueOf();
+  const durationPoint2 = dayjs(point2.dateTo).valueOf() - dayjs(point2.dateFrom).valueOf();
 
   return durationPoint2 - durationPoint1;
 }
 
 function sortByDateFrom(point1, point2) {
-  const date1 = new Date(point1.dateFrom);
-  const date2 = new Date(point2.dateFrom);
+  const date1 = dayjs(point1.dateFrom).valueOf();
+  const date2 = dayjs(point2.dateFrom).valueOf();
   return date1 - date2;
 }
-export{comparePointPrice, calculateDateRangeDifference, sortByDateFrom};
+export{sortByPriceDesc , sortByTimeDesc, sortByDateFrom};
