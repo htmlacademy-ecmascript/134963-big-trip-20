@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeTripDueDate } from '../utils/utils.js';
 import { POINT_EMPTY, DATE_FORMAT } from '../const.js';
 import {capitalizeFirstLetter} from '../utils/common.js';
@@ -146,7 +146,7 @@ const createFormTemplate = ({ point = POINT_EMPTY, pointDestination, pointOffer 
   );
 };
 
-export default class FormView extends AbstractView{
+export default class FormView extends AbstractStatefulView{
   #point = null;
   #pointDestination = null;
   #pointOffer = null;
@@ -164,6 +164,7 @@ export default class FormView extends AbstractView{
     this.#handleDeleteClick = onDeleteClick;
     this.#handleToggleClick = onToggleClick;
 
+    this._setState(FormView.parseTaskToState(point));
 
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
@@ -173,7 +174,7 @@ export default class FormView extends AbstractView{
 
   get template() {
     return createFormTemplate({
-      point: this.#point,
+      state: this._state,
       pointDestination: this.#pointDestination,
       pointOffer: this.#pointOffer
     });
@@ -182,7 +183,7 @@ export default class FormView extends AbstractView{
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(FormView.perseStateToPoint(this._state));
   };
 
   #deleteClickHandler = (evt) => {
@@ -194,5 +195,13 @@ export default class FormView extends AbstractView{
     evt.preventDefault();
     this.#handleToggleClick();
   };
+
+  static parsePointToState({point}) {
+    return {...point};
+  }
+
+  static perseStateToPoint({state}) {
+    return {...state};
+  }
 }
 
