@@ -44,6 +44,12 @@ const FilterType = {
   PAST: 'past',
 };
 
+const SortType = {
+  DEFAULT: 'default',
+  TIME_DESC: 'time-desc',
+  PRICE_DESC: 'price-desc',
+};
+
 export {
   TYPES,
   DESCRIPTIONS,
@@ -51,6 +57,7 @@ export {
   POINT_EMPTY,
   DATE_FORMAT,
   Duration,
-  FilterType
+  FilterType,
+  SortType
 };
 
