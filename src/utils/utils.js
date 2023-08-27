@@ -1,4 +1,8 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
+dayjs.extend(duration);
+
 import {Duration} from '../const.js';
 import {getRandomInteger } from '../utils/common.js';
 
@@ -15,33 +19,31 @@ const getDate = ({next}) => {
     date = dayjs(date)
       .add(minsGap, 'minute')
       .add(hoursGap, 'hour')
-      .add(daysGap, 'day');
+      .add(daysGap, 'day').toDate();
   }
 
   return date;
 };
 
 const dateDiff = (date1, date2) => {
-  let answer = '';
-  const dateDifferent = date1.diff(date2, 'm');
-  const dateDay = Math.floor(dateDifferent / 1440);
-  const answerH = dateDifferent - dateDay * 1440;
-  const dateHour = Math.floor(answerH / 60);
-  const dateMinute = answerH - dateHour * 60;
-  if (dateDifferent < 0) {
-    return 'wrong date';
-  } else {
-    if (dateDay !== 0) {
-      answer = `${dateDay}d `;
-    }
-    if (dateHour !== 0) {
-      answer += `${dateHour}h ` ;
-    }
-    if (dateMinute !== 0) {
-      answer += `${dateMinute}m` ;
-    }
-    return answer;
+  const diff = dayjs.duration(dayjs(date1).diff(dayjs(date2)));
+  const days = diff.days();
+  const hours = diff.hours();
+  const minutes = diff.minutes();
+
+  if (diff.asMilliseconds() < 0) {
+    return 'Ошибка: отрицательная длительность';
   }
+
+  let result = '';
+  if (days > 0) {
+    result += `${days}D `;
+  }
+  if (hours > 0) {
+    result += `${hours}H `;
+  }
+  result += `${minutes}M`;
+  return result;
 };
 
 
