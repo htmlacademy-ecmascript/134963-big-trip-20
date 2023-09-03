@@ -171,7 +171,8 @@ export default class FormView extends AbstractStatefulView{
     this._setState(FormView.parsePointToState(point));
 
     this.#setInnerHandlers();
-
+    console.log('офферы 2', pointOffers);
+    console.log('поинты 2', point);
   }
 
   get template() {

@@ -20,7 +20,7 @@ const createViewOffersList = (offers) => {
 
 const createTripPoint = ({ point, pointDestinations, pointOffers }) => {
   const { dateFrom, dateTo, type, basePrice, isFavorite } = point;
-  const offersByType = pointOffers.offers;
+  const offersByType = pointOffers.offers.filter((offer) => point.offers.includes(offer.id));
   const timeDuration = dateDiff(dateTo, dateFrom);
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
@@ -82,8 +82,8 @@ export default class TripPointView extends AbstractView {
     this.#pointOffers = pointOffers;
     this.#handleFormClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
-    console.log(pointOffers);
-    console.log(point);
+    console.log('офферы', pointOffers);
+    console.log('поинты', point);
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickFormHandler);
     this.favoriteButton = this.element.querySelector('.event__favorite-btn');
