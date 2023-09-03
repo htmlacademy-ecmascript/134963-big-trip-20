@@ -17,21 +17,22 @@ const createDatalist = (pointDestinations) => {
     `<datalist id="destination-list-1">${dataList}</datalist>`
   );
 };
-const createOffersListTemplate = (offers) => offers.map((currentOffer) => {
-  const isChecked = !offers.includes(currentOffer.id);
-  const checked = isChecked ? 'checked' : '';
-
-  return (
-    `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-mockid-${currentOffer.id}" type="checkbox" name="event-offer-mockid-${currentOffer.id}" ${checked}>
-        <label class="event__offer-label" for="event-offer-mockid-${currentOffer.id}">
-          <span class="event__offer-title">${currentOffer.title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${currentOffer.price}</span>
-        </label>
-       </div>`
-  );
-}).join('');
+const createOffersListTemplate = (offersByType, offers) => offersByType.map((currentOffer) => (
+  `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  
+        visually-hidden" 
+        id="event-offer-mockid-${currentOffer.id}"
+        data-offer-id="${currentOffer.id}" 
+        type="checkbox" 
+        name="event-offer-mockid-${currentOffer.id}" 
+        ${offers.some((selectedOption) => selectedOption === currentOffer.id) ? 'checked' : ''}>
+      <label class="event__offer-label" for="event-offer-mockid-${currentOffer.id}">
+        <span class="event__offer-title">${currentOffer.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${currentOffer.price}</span>
+      </label>
+      </div>`
+)).join('');
 
 const createTypesListTemplate = (offerTypes, type) => {
   const offerType = (offerTypes.length === 0) ? '' :
@@ -63,9 +64,9 @@ const createTypesListTemplate = (offerTypes, type) => {
      </div>`);
 };
 
-const createFormTemplate = ({ point , pointDestinations, pointOffer }) => {
-  const { dateFrom, dateTo, type, basePrice, destination } = point;
-  const offersByType = pointOffer.find((item) => item.type === type).offers;
+const createFormTemplate = ({ point , pointDestinations, pointOffers }) => {
+  const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
+  const offersByType = pointOffers.find((item) => item.type === type).offers;
   const currentDestination = pointDestinations.find((waypoint) => waypoint.id === destination);
   const destinationName = pointDestinations.find((waypoint) => waypoint.id === destination).name;
   const destinationList = createDatalist(pointDestinations);
@@ -73,7 +74,7 @@ const createFormTemplate = ({ point , pointDestinations, pointOffer }) => {
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
-        ${createTypesListTemplate(pointOffer, type)}    
+        ${createTypesListTemplate(pointOffers, type)}    
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
@@ -132,7 +133,7 @@ const createFormTemplate = ({ point , pointDestinations, pointOffer }) => {
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${createOffersListTemplate(offersByType)}
+            ${createOffersListTemplate(offersByType, offers)}
           </div>
           </section>
 
@@ -152,50 +153,53 @@ const createFormTemplate = ({ point , pointDestinations, pointOffer }) => {
 
 export default class FormView extends AbstractStatefulView{
   _state = null;
-  #pointDestination = null;
-  #pointOffer = null;
+  #pointDestinations = null;
+  #pointOffers = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
   #handleToggleClick = null;
 
 
-  constructor({ point, pointDestination, pointOffer, onFormSubmit, onDeleteClick, onToggleClick}) {
+  constructor({ point, pointDestinations, pointOffers, onFormSubmit, onDeleteClick, onToggleClick}) {
     super();
-    this.#pointDestination = pointDestination;
-    this.#pointOffer = pointOffer;
+    this.#pointDestinations = pointDestinations;
+    this.#pointOffers = pointOffers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
     this.#handleToggleClick = onToggleClick;
 
-    this._setState(FormView.parsePointToState({point}));
+    this._setState(FormView.parsePointToState(point));
 
-    this._restoreHandlers();
+    this.#setInnerHandlers();
 
   }
 
-  _restoreHandlers() {
+  get template() {
+    return createFormTemplate({
+      point: this._state,
+      pointDestinations: this.#pointDestinations,
+      pointOffers: this.#pointOffers
+    });
+  }
 
+  #setInnerHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#toggleClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeInputChange);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputChange);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerClickHandler);
+  }
 
-    this.element
-      .querySelector('.event__input--destination')
-      .addEventListener('change', this.#destinationChangeHandler);
-
-    const offersList = this.element.querySelector('.event__available-offers');
-
-    if (offersList) {
-      offersList.addEventListener('change', this.#offerClickHandler);
-    }
+  _restoreHandlers() {
+    this.#setInnerHandlers();
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
 
-    const selectedDestination = this._state.point.destination;
+    const selectedDestination = this._state.destination;
     if (!selectedDestination) {
       return;
     }
@@ -217,11 +221,8 @@ export default class FormView extends AbstractStatefulView{
   #typeInputChange = (evt) => {
     evt.preventDefault();
     this.updateElement ({
-      point: {
-        ...this._state.point,
-        type: evt.target.value,
-        offers: [],
-      }
+      type: evt.target.value,
+      offers: [],
     });
   };
 
@@ -235,59 +236,66 @@ export default class FormView extends AbstractStatefulView{
     }
 
     this._setState({
-      point: {
-        ...this._state.point,
-        basePrice: inputValue,
-      },
+      basePrice: inputValue,
     });
   };
 
   #destinationChangeHandler = (evt) => {
-    const selectedDestination = this.element.querySelector('.event__input--destination').value;
-    const selectedDestinationObject = this.#pointDestination.find((destination) => destination.name === selectedDestination);
+    const selectedDestination = evt.target.value;
+    const selectedDestinationObject = this.#pointDestinations.find((destination) => destination.name === selectedDestination);
 
-    evt.preventDefault();
 
     if (!selectedDestination || !selectedDestinationObject) {
-      this.element.querySelector('.event__input--destination').value = '';
+      evt.target.value = '';
       return;
     }
     const selectedDestinationId = selectedDestinationObject.id;
 
-    this.updateElement ({
+    this.updateElement ({destination: selectedDestinationId});
+  };
+
+  #offerClickHandler = (evt) => {
+  //   evt.preventDefault();
+  //   console.log('evt.target', evt.target);
+
+    //   const offerId = evt.target.dataset.offerId;
+    //   const isChecked = evt.target.checked;
+
+    //   const newOffers = new Set(this._state.offers);
+
+    //   if (isChecked) {
+    //     newOffers.add(offerId);
+    //     console.log('Checked:', offerId);
+    //   } else {
+    //     newOffers.delete(offerId);
+    //     console.log('Unchecked:', offerId);
+    //   }
+
+    //   this._setState({
+    //     offers: Array.from(newOffers),
+    //   });
+    // };
+    evt.preventDefault();
+    const selectedOptions = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+
+    this._setState({
       point: {
         ...this._state.point,
-        destination: selectedDestinationId,
+        offers: selectedOptions.map((option) => option.value)
       }
     });
   };
 
-  #offerClickHandler = (evt) => {
-    evt.preventDefault();
 
-    const checkedBoxes = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
-
-    this._setState({
-      ...this._state.point,
-      offers: checkedBoxes.map((element) => element.dataset.offerId)
-    });
-  };
-
-  static parsePointToState = ({point}) => ({point});
+  static parsePointToState = (point) => ({...point});
 
 
   static parseStateToPoint = (state) => state;
 
-  get template() {
-    return createFormTemplate({
-      point: this._state.point,
-      pointDestinations: this.#pointDestination,
-      pointOffer: this.#pointOffer
-    });
-  }
-
   reset(point) {
-    this.updateElement({ point });
+    this.updateElement(
+      FormView.parsePointToState(point),
+    );
 
   }
 
