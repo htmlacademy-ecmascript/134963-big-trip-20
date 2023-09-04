@@ -199,12 +199,13 @@ export default class FormView extends AbstractStatefulView{
     evt.preventDefault();
 
     const selectedDestination = this._state.destination;
-    if (!selectedDestination) {
+    const newPrice = this._state.price;
+
+    if (!selectedDestination || newPrice < 0) {
       return;
     }
 
-    const point = FormView.parseStateToPoint(this._state);
-    this.#handleFormSubmit(point);
+    this.#handleFormSubmit(FormView.parseStateToPoint(this._state));
   };
 
   #deleteClickHandler = (evt) => {
