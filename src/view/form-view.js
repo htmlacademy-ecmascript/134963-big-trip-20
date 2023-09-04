@@ -171,8 +171,6 @@ export default class FormView extends AbstractStatefulView{
     this._setState(FormView.parsePointToState(point));
 
     this.#setInnerHandlers();
-    console.log('офферы 2', pointOffers);
-    console.log('поинты 2', point);
   }
 
   get template() {
@@ -256,37 +254,22 @@ export default class FormView extends AbstractStatefulView{
   };
 
   #offerClickHandler = (evt) => {
-  //   evt.preventDefault();
-  //   console.log('evt.target', evt.target);
-
-    //   const offerId = evt.target.dataset.offerId;
-    //   const isChecked = evt.target.checked;
-
-    //   const newOffers = new Set(this._state.offers);
-
-    //   if (isChecked) {
-    //     newOffers.add(offerId);
-    //     console.log('Checked:', offerId);
-    //   } else {
-    //     newOffers.delete(offerId);
-    //     console.log('Unchecked:', offerId);
-    //   }
-
-    //   this._setState({
-    //     offers: Array.from(newOffers),
-    //   });
-    // };
     evt.preventDefault();
-    const selectedOptions = Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'));
+    const offerId = evt.target.dataset.offerId;
+    const isChecked = evt.target.checked;
+
+    const newOffers = new Set(this._state.offers);
+
+    if (isChecked) {
+      newOffers.add(offerId);
+    } else {
+      newOffers.delete(offerId);
+    }
 
     this._setState({
-      point: {
-        ...this._state.point,
-        offers: selectedOptions.map((option) => option.value)
-      }
+      offers: Array.from(newOffers),
     });
   };
-
 
   static parsePointToState = (point) => ({...point});
 

@@ -82,8 +82,6 @@ export default class TripPointView extends AbstractView {
     this.#pointOffers = pointOffers;
     this.#handleFormClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
-    console.log('офферы', pointOffers);
-    console.log('поинты', point);
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickFormHandler);
     this.favoriteButton = this.element.querySelector('.event__favorite-btn');
