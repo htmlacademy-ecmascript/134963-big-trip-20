@@ -34,6 +34,10 @@ export default class TripPresenter {
     this.#points = [...this.#pointsModel.points];
   }
 
+  get points() {
+    return this.#pointsModel.point;
+  }
+
   init() {
     this.#renderTripPointSort();
     this.#renderTripPoint();
