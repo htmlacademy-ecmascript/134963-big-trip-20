@@ -39,8 +39,8 @@ export default class PointPresenter {
 
     this.#pointComponent = new TripPointView({
       point: this.#point,
-      pointDestination: this.#destinationsModel.getById(point.destination),
-      pointOffer: this.#offersModel.getByType(point.type),
+      pointDestinations: this.#destinationsModel.getById(point.destination),
+      pointOffers: this.#offersModel.getByType(point.type),
       onEditClick: this.#handleToggleOpen,
       onFavoriteClick: this.#handleFavoriteClick,
     });
@@ -48,9 +48,9 @@ export default class PointPresenter {
     this.#pointEditComponent = new FormView(
       {
         point: this.#point,
-        pointDestination: this.#destinationsModel.destinations,
-        pointOffer: this.#offersModel.offers,
-        onFormSubmit: this.#handleForbSubmit,
+        pointDestinations: this.#destinationsModel.destinations,
+        pointOffers: this.#offersModel.offers,
+        onFormSubmit: this.#handleFormSubmit,
         onDeleteClick: this.#handleDeleteClick,
         onToggleClick: this.#handleToggleClose,
       }
@@ -80,6 +80,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFromFormToItem();
     }
   }
@@ -87,13 +88,15 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFromFormToItem();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
 
-  #handleForbSubmit = () => {
+  #handleFormSubmit = (updatedPoint) => {
     this.#replaceFromFormToItem();
+    this.#handlePointUpdate(updatedPoint);
   };
 
   #handleFavoriteClick = () => {

@@ -8,8 +8,9 @@ import
 
 
 const createViewOffersList = (offers) => {
-  const offersList = offers.offers.map((offer) =>
-    `<li class="event__offer">
+  const offersList = offers.length === 0 ? '' :
+    offers.map((offer) =>
+      `<li class="event__offer">
             <span class="event__offer-title">${offer.title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${offer.price}</span>
@@ -17,9 +18,9 @@ const createViewOffersList = (offers) => {
   return `<ul class="event__selected-offers">${offersList}</ul>`;
 };
 
-const createTripPoint = ({ point, pointDestination, pointOffer }) => {
+const createTripPoint = ({ point, pointDestinations, pointOffers }) => {
   const { dateFrom, dateTo, type, basePrice, isFavorite } = point;
-
+  const offersByType = pointOffers.offers.filter((offer) => point.offers.includes(offer.id));
   const timeDuration = dateDiff(dateTo, dateFrom);
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
@@ -36,7 +37,7 @@ const createTripPoint = ({ point, pointDestination, pointOffer }) => {
               src="img/icons/${type}.png" 
               alt="Event type icon">
           </div>
-          <h3 class="event__title">${type} ${pointDestination.name}</h3>
+          <h3 class="event__title">${type} ${pointDestinations.name}</h3>
           <div class="event__schedule">
             <p class="event__time">
               <time class="event__start-time" datetime=${humanizeTripDueDate(dateFrom, DATE_FORMAT.YEAR_MONTH_DAY_TIME)}>${humanizeTripDueDate(dateFrom,DATE_FORMAT.HOUR_MINUTES)}</time>
@@ -51,7 +52,7 @@ const createTripPoint = ({ point, pointDestination, pointOffer }) => {
           <h4 class="visually-hidden">Offers:</h4>
           <ul class="event__selected-offers">
             <li class="event__offer">
-          ${createViewOffersList(pointOffer)}
+          ${createViewOffersList(offersByType)}
                      </ul>
           <button class="${favoriteClassName}" type="button">
             <span class="visually-hidden">Add to favorite</span>
@@ -69,16 +70,16 @@ const createTripPoint = ({ point, pointDestination, pointOffer }) => {
 
 export default class TripPointView extends AbstractView {
   #point = null;
-  #pointDestination = null;
-  #pointOffer = null;
+  #pointDestinations = null;
+  #pointOffers = null;
   #handleFormClick = null;
   #handleFavoriteClick = null;
 
-  constructor({ point, pointDestination, pointOffer, onEditClick, onFavoriteClick }) {
+  constructor({ point, pointDestinations, pointOffers, onEditClick, onFavoriteClick }) {
     super();
     this.#point = point;
-    this.#pointDestination = pointDestination;
-    this.#pointOffer = pointOffer;
+    this.#pointDestinations = pointDestinations;
+    this.#pointOffers = pointOffers;
     this.#handleFormClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
@@ -90,8 +91,8 @@ export default class TripPointView extends AbstractView {
   get template() {
     return createTripPoint({
       point: this.#point,
-      pointDestination: this.#pointDestination,
-      pointOffer: this.#pointOffer
+      pointDestinations: this.#pointDestinations,
+      pointOffers: this.#pointOffers
     });
   }
 
