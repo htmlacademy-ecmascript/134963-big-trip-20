@@ -133,7 +133,6 @@ export default class TripPresenter {
     this.#pointPresenters.clear();
 
     remove(this.#sortComponent);
-    remove();
 
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;

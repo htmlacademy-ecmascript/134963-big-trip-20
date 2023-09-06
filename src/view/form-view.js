@@ -210,7 +210,7 @@ export default class FormView extends AbstractStatefulView{
 
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleDeleteClick();
+    this.#handleDeleteClick(FormView.parseStateToPoint(this._state));
   };
 
   #toggleClickHandler = (evt) => {

@@ -46,9 +46,13 @@ const dateDiff = (date1, date2) => {
   return result;
 };
 
+function isDatesEqual(dateA, dateB) {
+  return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+}
 
 export {
   humanizeTripDueDate,
   dateDiff,
-  getDate
+  getDate,
+  isDatesEqual
 };

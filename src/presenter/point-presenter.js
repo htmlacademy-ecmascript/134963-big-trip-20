@@ -2,6 +2,7 @@ import { replace, render, remove} from '../framework/render';
 import TripPointView from '../view/trip-point-view.js';
 import FormView from '../view/form-view';
 import { UserAction, UpdateType } from '../const';
+import { isDatesEqual } from '../utils/utils';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -99,8 +100,8 @@ export default class PointPresenter {
     this.#replaceFromFormToItem();
     this.#handlePointUpdate(
       UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      updatedPoint
+      isDatesEqual(this.#point.dateFrom, updatedPoint.dateFrom) ? UpdateType.MINOR : UpdateType.PATCH,
+      updatedPoint,
     );
   };
 
