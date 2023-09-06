@@ -9,6 +9,6 @@ const getRandomInteger = (a, b) => {
 
 const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 
-export {capitalizeFirstLetter, getRandomInteger, getRandomArrayElement, updateItem };
+export {capitalizeFirstLetter, getRandomInteger, getRandomArrayElement };
 
 
