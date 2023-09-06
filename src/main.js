@@ -5,6 +5,7 @@ import PointsModel from './model/points-model.js';
 import OffersModel from './model/offers-model.js';
 import DestinationsModel from './model/destination-model.js';
 import MockService from './service/mock-service.js';
+import FilterModel from './model/filter-model.js';
 
 
 const tripContainer = document.querySelector('.trip-events');
@@ -14,6 +15,7 @@ const tripFilterContainer = document.querySelector('.trip-controls__filters');
 const mockService = new MockService();
 const pointsModel = new PointsModel(mockService);
 const offersModel = new OffersModel(mockService);
+const filterModel = new FilterModel();
 const destinationsModel = new DestinationsModel(mockService);
 
 const tripPresenter = new TripPresenter({
@@ -21,6 +23,7 @@ const tripPresenter = new TripPresenter({
   destinationsModel,
   pointsModel,
   offersModel,
+  filterModel,
 });
 
 const headerPresenter = new HeaderPresenter({
