@@ -34,6 +34,8 @@ export default class TripPresenter {
   }
 
   get points() {
+
+    
     switch (this.#currentSortType) {
       case SortType.PRICE_DESC:
         return [...this.#pointsModel.points].sort(sortByPriceDesc);

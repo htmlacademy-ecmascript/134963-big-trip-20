@@ -1,6 +1,7 @@
 import { replace, render, remove} from '../framework/render';
 import TripPointView from '../view/trip-point-view.js';
 import FormView from '../view/form-view';
+import { UserAction, UpdateType } from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -96,11 +97,19 @@ export default class PointPresenter {
 
   #handleFormSubmit = (updatedPoint) => {
     this.#replaceFromFormToItem();
-    this.#handlePointUpdate(updatedPoint);
+    this.#handlePointUpdate(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      updatedPoint
+    );
   };
 
   #handleFavoriteClick = () => {
-    this.#handlePointUpdate({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handlePointUpdate(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
   };
 
   #handleToggleClose = () => {
@@ -111,7 +120,11 @@ export default class PointPresenter {
     this.#replaceFromItemToForm();
   };
 
-  #handleDeleteClick = () => {
+  #handleDeleteClick = (point) => {
+    this.#handlePointUpdate(
+      UserAction.DELETE_EVENT,
+      UpdateType.MINOR,
+      point);
     this.#removeForm();
   };
 
