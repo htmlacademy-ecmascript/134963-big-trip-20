@@ -30,6 +30,7 @@ export default class TripPresenter {
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
 
+    this.#pointsModel.addObserver(this.#handleModelPoint);
   }
 
   get points() {
@@ -62,7 +63,7 @@ export default class TripPresenter {
     this.#sortComponent = new SortView({
       onSortTypeChange: this.#handleSortTypeChange
     });
-    this.#sortPoints(this.#currentSortType); // что тут7
+    // this.#sortPoints(this.#currentSortType); // что тут7
     render(this.#sortComponent, this.#tripContainer);
   }
 
@@ -77,9 +78,20 @@ export default class TripPresenter {
     }
   }
 
-  #handlePointUpdate = (updatedPoint) => {
-     // Здесь будем вызывать обновление модели
-    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  #handleViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  };
+
+  #handleModelPoint = (updateType, data) => {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   };
 
   #renderPoint(point) {
@@ -87,7 +99,7 @@ export default class TripPresenter {
       pointListComponent: this.#tripListComponent.element,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
-      onDataChange: this.#handlePointUpdate,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
     });
 
