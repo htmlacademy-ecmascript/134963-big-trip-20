@@ -4,7 +4,6 @@ import EmptyView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import { SortType } from '../const.js';
 import { sortByPriceDesc , sortByTimeDesc, sortByDateFrom } from '../utils/sort.js';
-import { updateItem } from '../utils/common.js';
 import { render} from '../framework/render.js';
 
 
@@ -14,10 +13,10 @@ export default class TripPresenter {
   #offersModel = null;
   #destinationsModel = null;
 
-  #points = null;
+  
 
   #currentSortType = SortType.DEFAULT;
-  #sourcedPoints = [];
+ 
 
   #tripListComponent = new TripPointsListView();
   #sortComponent = null;
@@ -31,17 +30,24 @@ export default class TripPresenter {
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
 
-    this.#points = [...this.#pointsModel.points];
   }
 
   get points() {
-    return this.#pointsModel.point;
+    switch (this.#currentSortType) {
+      case SortType.PRICE_DESC:
+        return [...this.#pointsModel.points].sort(sortByPriceDesc);
+      case SortType.TIME_DESC:
+        return [...this.#pointsModel.points].sort(sortByTimeDesc);
+      case SortType.DEFAULT:
+        return [...this.#pointsModel.points].sort(sortByDateFrom);
+    }
+
+    return this.#pointsModel.points;
   }
 
   init() {
     this.#renderTripPointSort();
     this.#renderTripPoint();
-    this.#sourcedPoints = [...this.#pointsModel.points];
   }
 
   #renderTripPointList() {
@@ -56,7 +62,7 @@ export default class TripPresenter {
     this.#sortComponent = new SortView({
       onSortTypeChange: this.#handleSortTypeChange
     });
-    this.#sortPoints(this.#currentSortType);
+    this.#sortPoints(this.#currentSortType); // что тут7
     render(this.#sortComponent, this.#tripContainer);
   }
 
@@ -72,8 +78,7 @@ export default class TripPresenter {
   }
 
   #handlePointUpdate = (updatedPoint) => {
-    this.#points = updateItem(this.#points, updatedPoint);
-    this.#sourcedPoints = updateItem(this.#sourcedPoints, updatedPoint);
+     // Здесь будем вызывать обновление модели
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -90,23 +95,6 @@ export default class TripPresenter {
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
-  #sortPoints(sortType) {
-    switch (sortType) {
-
-      case SortType.TIME_DESC:
-        this.#points.sort(sortByTimeDesc);
-        break;
-      case SortType.PRICE_DESC:
-        this.#points.sort(sortByPriceDesc);
-        break;
-      case SortType.DEFAULT:
-        this.#points.sort(sortByDateFrom);
-        break;
-      default:
-        this.#points = [...this.#sourcedPoints];
-    }
-    this.#currentSortType = sortType;
-  }
 
   #clearPointList() {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
@@ -121,7 +109,7 @@ export default class TripPresenter {
     if (this.#currentSortType === sortType){
       return;
     }
-    this.#sortPoints(sortType);
+    this.#currentSortType =  sortType;
 
     this.#clearPointList();
     this.#renderTripPoint();
