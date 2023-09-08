@@ -2,7 +2,7 @@ import TripPointsListView from '../view/trip-point-list-view.js';
 import SortView from '../view/sort-view.js';
 import EmptyView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
-import { SortType,UpdateType, UserAction } from '../const.js';
+import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortByPriceDesc , sortByTimeDesc, sortByDateFrom } from '../utils/sort.js';
 import { remove, render} from '../framework/render.js';
 import {filter} from '../utils/filter.js';
@@ -17,7 +17,7 @@ export default class TripPresenter {
 
 
   #currentSortType = SortType.DEFAULT;
-
+  #filterType = FilterType.EVERYTHING;
 
   #tripListComponent = new TripPointsListView();
   #sortComponent = null;
@@ -37,9 +37,9 @@ export default class TripPresenter {
   }
 
   get points() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[filterType](points);
+    const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.PRICE_DESC:
