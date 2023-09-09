@@ -56,6 +56,8 @@ export default class TripPresenter {
         return filteredPoints.sort(sortByPriceDesc);
       case SortType.TIME_DESC:
         return filteredPoints.sort(sortByTimeDesc);
+      case SortType.DEFAULT:
+        return filteredPoints.sort(sortByDateFrom);
     }
 
     return filteredPoints;
