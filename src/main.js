@@ -7,7 +7,8 @@ import DestinationsModel from './model/destination-model.js';
 import MockService from './service/mock-service.js';
 import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
-
+import NewTaskButtonView from './view/new-task-button-view.js';
+import {render} from './framework/render.js';
 
 const tripContainer = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
@@ -26,6 +27,7 @@ const tripPresenter = new TripPresenter({
   pointsModel,
   offersModel,
   filterModel,
+  onNewEventDestroy: handleNewEventFormClose
 });
 
 const headerPresenter = new HeaderPresenter({
@@ -37,8 +39,23 @@ const headerPresenter = new HeaderPresenter({
 const filterPresenter = new FilterPresenter({
   filterContainer: tripMainElement,
   filterModel,
-  pointsModel
+  pointsModel,
 });
+
+const newEventButtonComponent = new NewTaskButtonView({
+  onClick: handleNewEventButtonClick
+});
+
+function handleNewEventFormClose() {
+  newEventButtonComponent.element.disabled = false;
+}
+
+function handleNewEventButtonClick() {
+  tripPresenter.createPoint();
+  newEventButtonComponent.element.disabled = true;
+}
+
+render(newEventButtonComponent, tripMainElement);
 
 
 headerPresenter.init();

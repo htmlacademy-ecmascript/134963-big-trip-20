@@ -82,7 +82,6 @@ export default class SortView extends AbstractView {
   }
 
   #sortTypeChangeHandler = (evt) => {
-    //evt.preventDefault();
     this.#handleSortTypeChange(evt.target.dataset.sortType);
   };
 

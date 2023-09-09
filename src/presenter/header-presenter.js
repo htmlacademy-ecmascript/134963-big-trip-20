@@ -1,5 +1,4 @@
 import TripInfoView from '../view/trip-info-view.js';
-import NewTaskButtonView from '../view/new-task-button-view.js';
 import { render, RenderPosition } from '../framework/render';
 
 
@@ -13,7 +12,6 @@ export default class HeaderPresenter {
   }
 
   init() {
-    this.#renderNewTaskButtonView();
     this.#renderTripInfoView();
 
 
@@ -21,10 +19,6 @@ export default class HeaderPresenter {
 
   #renderTripInfoView() {
     render(new TripInfoView(), this.#headerContainer, RenderPosition.AFTERBEGIN);
-  }
-
-  #renderNewTaskButtonView() {
-    render(new NewTaskButtonView(),this.#headerContainer);
   }
 
 }

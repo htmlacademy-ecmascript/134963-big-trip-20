@@ -1,6 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeTripDueDate } from '../utils/utils.js';
-import { DATE_FORMAT } from '../const.js';
+import { DATE_FORMAT, POINT_EMPTY } from '../const.js';
 import {capitalizeFirstLetter} from '../utils/common.js';
 
 const createViewDestinationPhoto = (photos) => {
@@ -160,7 +160,7 @@ export default class FormView extends AbstractStatefulView{
   #handleToggleClick = null;
 
 
-  constructor({ point, pointDestinations, pointOffers, onFormSubmit, onDeleteClick, onToggleClick}) {
+  constructor({ point = POINT_EMPTY, pointDestinations, pointOffers, onFormSubmit, onDeleteClick, onToggleClick}) {
     super();
     this.#pointDestinations = pointDestinations;
     this.#pointOffers = pointOffers;
