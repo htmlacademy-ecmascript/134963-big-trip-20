@@ -22,7 +22,7 @@ export default class TripPresenter {
 
   #tripListComponent = new TripPointsListView();
   #sortComponent = null;
-  #emptyListComponent = new EmptyView();
+  #emptyListComponent = null;
 
   #pointPresenters = new Map();
   #newEventPresenter = null;
@@ -65,10 +65,13 @@ export default class TripPresenter {
 
   init() {
     this.#renderTripPoint();
-   
   }
 
   #renderTripPointList() {
+    this.#emptyListComponent = new EmptyView({
+      filterType: this.#filterType
+    });
+
     render(this.#tripListComponent, this.#tripContainer);
   }
 
@@ -99,7 +102,6 @@ export default class TripPresenter {
   }
 
   #handleViewAction = (actionType, updateType, update) => {
-    console.log(actionType, updateType, update);
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointsModel.updatePoint(updateType, update);
@@ -114,7 +116,6 @@ export default class TripPresenter {
   };
 
   #handleModelPoint = (updateType, data) => {
-    console.log(updateType, data);
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenters.get(data.id).init(data);
