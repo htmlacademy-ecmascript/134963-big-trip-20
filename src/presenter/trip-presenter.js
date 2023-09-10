@@ -66,7 +66,6 @@ export default class TripPresenter {
 
   init() {
     this.#renderTripPoint();
-    this.#renderFilters();
   }
 
   #renderTripPointList() {
@@ -143,16 +142,6 @@ export default class TripPresenter {
 
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
-  }
-
-  #renderFilters() {
-    const filterPresenter = new FilterPresenter({
-      filterContainer: this.#tripContainer,
-      filtersModel: this.#filterModel,
-      pointsModel: this.#pointsModel,
-    });
-
-    filterPresenter.init();
   }
 
   createPoint() {
