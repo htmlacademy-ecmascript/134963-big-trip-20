@@ -12,7 +12,7 @@ const NoEventsTextType = {
 function createTripEmpty(filterType) {
   const noEventsTextValue = NoEventsTextType[filterType];
 
-  return (/*html*/
+  return (
     `<p class="trip-events__msg">${noEventsTextValue}</p>
     `);
 }
