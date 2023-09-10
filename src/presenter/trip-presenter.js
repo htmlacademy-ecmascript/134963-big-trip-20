@@ -3,6 +3,7 @@ import SortView from '../view/sort-view.js';
 import EmptyView from '../view/list-empty-view.js';
 import NewEventPresenter from './new-event-presenter.js';
 import PointPresenter from './point-presenter.js';
+import FilterPresenter from './filter-presenter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortByPriceDesc , sortByTimeDesc, sortByDateFrom } from '../utils/sort.js';
 import { remove, render} from '../framework/render.js';
@@ -64,8 +65,8 @@ export default class TripPresenter {
   }
 
   init() {
-    this.#renderTripPointSort();
     this.#renderTripPoint();
+    this.#renderFilters();
   }
 
   #renderTripPointList() {
@@ -91,6 +92,7 @@ export default class TripPresenter {
     if (points.length === 0) {
       this.#renderEmptyList();
     } else {
+      this.#renderTripPointSort();
       this.#renderTripPointList();
       points.forEach((point) => {
         this.#renderPoint(point);
@@ -141,6 +143,16 @@ export default class TripPresenter {
 
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
+  }
+
+  #renderFilters() {
+    const filterPresenter = new FilterPresenter({
+      filterContainer: this.#tripContainer,
+      filtersModel: this.#filterModel,
+      pointsModel: this.#pointsModel,
+    });
+
+    filterPresenter.init();
   }
 
   createPoint() {
