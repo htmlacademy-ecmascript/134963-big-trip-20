@@ -3,7 +3,6 @@ import SortView from '../view/sort-view.js';
 import EmptyView from '../view/list-empty-view.js';
 import NewEventPresenter from './new-event-presenter.js';
 import PointPresenter from './point-presenter.js';
-import FilterPresenter from './filter-presenter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortByPriceDesc , sortByTimeDesc, sortByDateFrom } from '../utils/sort.js';
 import { remove, render} from '../framework/render.js';
@@ -66,6 +65,7 @@ export default class TripPresenter {
 
   init() {
     this.#renderTripPoint();
+   
   }
 
   #renderTripPointList() {
@@ -81,7 +81,6 @@ export default class TripPresenter {
       onSortTypeChange: this.#handleSortTypeChange,
       currentSortType: this.#currentSortType,
     });
-    // this.#sortPoints(this.#currentSortType); // что тут7
     render(this.#sortComponent, this.#tripContainer);
   }
 
