@@ -41,7 +41,6 @@ export default class PointsModel extends Observable {
 
   deletePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
-
     if (index === -1) {
       throw new Error('Не могу обновить несуществующую точку');
     }

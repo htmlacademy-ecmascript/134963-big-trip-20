@@ -52,6 +52,7 @@ export default class PointPresenter {
         point: this.#point,
         pointDestinations: this.#destinationsModel.destinations,
         pointOffers: this.#offersModel.offers,
+        isEditMode: false,
         onFormSubmit: this.#handleFormSubmit,
         onDeleteClick: this.#handleDeleteClick,
         onToggleClick: this.#handleToggleClose,
@@ -123,10 +124,9 @@ export default class PointPresenter {
 
   #handleDeleteClick = (point) => {
     this.#handlePointUpdate(
-      UserAction.DELETE_EVENT,
+      UserAction.DELETE_POINT,
       UpdateType.MINOR,
       point);
-    this.#removeForm();
   };
 
   #replaceFromItemToForm() {
@@ -140,11 +140,6 @@ export default class PointPresenter {
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
-  }
-
-  #removeForm() {
-    remove(this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 }
 

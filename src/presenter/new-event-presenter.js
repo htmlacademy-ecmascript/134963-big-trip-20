@@ -8,17 +8,19 @@ export default class NewEventPresenter {
   #handleDataChange = null;
   #handleDestroy = null;
 
-  #destinations = null;
-  #offers = null;
+  #point = null;
+  #destinationsModel = null;
+  #offersModel = null;
 
   #FormComponent = null;
 
-  constructor ({pointListContainer, onDataChange, onDestroy, destinations, offers}) {
+  constructor ({pointListContainer, onDataChange, onDestroy, point, destinations, offers}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
-    this.#destinations = destinations;
-    this.#offers = offers;
+    this.#point = point;
+    this.#destinationsModel = destinations;
+    this.#offersModel = offers;
   }
 
   init() {
@@ -29,8 +31,10 @@ export default class NewEventPresenter {
     this.#FormComponent = new FormView({
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
-      destinations: this.#destinations,
-      offers: this.#offers,
+      isEditMode: true,
+      point: this.#point,
+      pointDestinations: this.#destinationsModel.destinations,
+      pointOffers: this.#offersModel.offers,
     });
 
     render(this.#FormComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);

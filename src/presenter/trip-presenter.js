@@ -42,19 +42,19 @@ export default class TripPresenter {
       onDestroy: onNewEventDestroy,
     });
 
-    this.#pointsModel.addObserver(this.#handleModelPoint);
-    this.#filterModel.addObserver(this.#handleModelPoint);
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
     this.#filterType = this.#filterModel.filters;
     const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#filterType](points);
-
     switch (this.#currentSortType) {
       case SortType.PRICE_DESC:
         return filteredPoints.sort(sortByPriceDesc);
       case SortType.TIME_DESC:
+        console.log(this.#currentSortType, 'and');
         return filteredPoints.sort(sortByTimeDesc);
       case SortType.DEFAULT:
         return filteredPoints.sort(sortByDateFrom);
@@ -68,14 +68,14 @@ export default class TripPresenter {
   }
 
   #renderTripPointList() {
-    this.#emptyListComponent = new EmptyView({
-      filterType: this.#filterType
-    });
-
     render(this.#tripListComponent, this.#tripContainer);
   }
 
   #renderEmptyList() {
+    this.#emptyListComponent = new EmptyView({
+      filterType: this.#filterType
+    });
+
     render(this.#emptyListComponent, this.#tripContainer);
   }
 
@@ -92,16 +92,16 @@ export default class TripPresenter {
 
     if (points.length === 0) {
       this.#renderEmptyList();
-    } else {
-      this.#renderTripPointSort();
-      this.#renderTripPointList();
-      points.forEach((point) => {
-        this.#renderPoint(point);
-      });
+      return;
     }
+    this.#renderTripPointSort();
+    this.#renderTripPointList();
+    points.forEach((point) => this.#renderPoint(point));
+
   }
 
   #handleViewAction = (actionType, updateType, update) => {
+    console.log({actionType});
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointsModel.updatePoint(updateType, update);
@@ -115,17 +115,17 @@ export default class TripPresenter {
     }
   };
 
-  #handleModelPoint = (updateType, data) => {
+  #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        this.#clearPoint();
+        this.#clearContainer();
         this.#renderTripPoint();
         break;
       case UpdateType.MAJOR:
-        this.#clearPoint({resetSortType:true});
+        this.#clearContainer({resetSortType:true});
         this.#renderTripPoint();
         break;
     }
@@ -150,7 +150,7 @@ export default class TripPresenter {
     this.#newEventPresenter.init();
   }
 
-  #clearPoint({resetSortType = false} = {}) {
+  #clearContainer({resetSortType = false} = {}) {
     this.#newEventPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
@@ -177,7 +177,7 @@ export default class TripPresenter {
     }
     this.#currentSortType = sortType;
 
-    this.#clearPoint({resetSortType: true});
+    this.#clearContainer({resetSortType: true});
     this.#renderTripPoint();
   };
 }
