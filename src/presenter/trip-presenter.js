@@ -177,7 +177,7 @@ export default class TripPresenter {
     }
     this.#currentSortType = sortType;
 
-    this.#clearContainer({resetSortType: true});
+    this.#clearContainer();
     this.#renderTripPoint();
   };
 }
