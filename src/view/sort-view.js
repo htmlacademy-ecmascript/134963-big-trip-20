@@ -51,7 +51,6 @@ const createSortTemplate = (currentSortType) => (
           value="sort-price"
           data-sort-type="${SortType.PRICE_DESC}"
           ${currentSortType === SortType.PRICE_DESC ? 'checked' : ''}
-          checked
         >
         <label class="trip-sort__btn" for="sort-price">Price</label>
       </div>

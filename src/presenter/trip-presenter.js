@@ -54,7 +54,6 @@ export default class TripPresenter {
       case SortType.PRICE_DESC:
         return filteredPoints.sort(sortByPriceDesc);
       case SortType.TIME_DESC:
-        console.log(this.#currentSortType, 'and');
         return filteredPoints.sort(sortByTimeDesc);
       case SortType.DEFAULT:
         return filteredPoints.sort(sortByDateFrom);
@@ -101,7 +100,6 @@ export default class TripPresenter {
   }
 
   #handleViewAction = (actionType, updateType, update) => {
-    console.log({actionType});
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointsModel.updatePoint(updateType, update);
