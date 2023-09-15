@@ -20,8 +20,8 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
 };
 
 
-const createFilterTemplate = (filterItem, currentFilterType) => {
-  const filterItemsTemplate = filterItem
+const createFilterTemplate = (filters, currentFilterType) => {
+  const filterItemsTemplate = filters
     .map((filter) => createFilterItemTemplate(filter, currentFilterType))
     .join('');
   return (
