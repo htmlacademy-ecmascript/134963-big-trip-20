@@ -1,3 +1,4 @@
+import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeTripDueDate } from '../utils/utils.js';
 import { DATE_FORMAT, POINT_EMPTY } from '../const.js';
@@ -27,7 +28,7 @@ const createOffersListTemplate = (offersByType, offers) => offersByType.map((cur
         name="event-offer-mockid-${currentOffer.id}" 
         ${offers.some((selectedOption) => selectedOption === currentOffer.id) ? 'checked' : ''}>
       <label class="event__offer-label" for="event-offer-mockid-${currentOffer.id}">
-        <span class="event__offer-title">${currentOffer.title}</span>
+        <span class="event__offer-title">${he.encode(currentOffer.title)}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${currentOffer.price}</span>
       </label>
@@ -95,7 +96,7 @@ const createFormTemplate = ({ point , pointDestinations, pointOffers, isEditMode
               id="event-destination-1" 
               type="text" 
               name="event-destination" 
-              value="${destinationName}" 
+              value="${he.encode(destinationName)}" 
               list="destination-list-1"
             >
             ${destinationList}
@@ -150,7 +151,7 @@ const createFormTemplate = ({ point , pointDestinations, pointOffers, isEditMode
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${destinationDescription}</p>
+            <p class="event__destination-description">${he.encode(destinationDescription)}</p>
 
             <div class="event__photos-container">
               ${createViewDestinationPhoto(destinationPicture)}

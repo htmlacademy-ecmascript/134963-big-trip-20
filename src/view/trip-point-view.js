@@ -1,3 +1,4 @@
+import he from 'he';
 import AbstractView from '../framework/view/abstract-view.js';
 import { DATE_FORMAT } from '../const.js';
 import
@@ -11,7 +12,7 @@ const createViewOffersList = (offers) => {
   const offersList = offers.length === 0 ? '' :
     offers.map((offer) =>
       `<li class="event__offer">
-            <span class="event__offer-title">${offer.title}</span>
+            <span class="event__offer-title">${he.encode(offer.title)}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${offer.price}</span>
       </li>`).join('');
@@ -37,7 +38,7 @@ const createTripPoint = ({ point, pointDestinations, pointOffers }) => {
               src="img/icons/${type}.png" 
               alt="Event type icon">
           </div>
-          <h3 class="event__title">${type} ${pointDestinations.name}</h3>
+          <h3 class="event__title">${type} ${he.encode(pointDestinations.name)}</h3>
           <div class="event__schedule">
             <p class="event__time">
               <time class="event__start-time" datetime=${humanizeTripDueDate(dateFrom, DATE_FORMAT.YEAR_MONTH_DAY_TIME)}>${humanizeTripDueDate(dateFrom,DATE_FORMAT.HOUR_MINUTES)}</time>
