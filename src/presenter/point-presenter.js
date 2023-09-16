@@ -1,6 +1,8 @@
 import { replace, render, remove} from '../framework/render';
 import TripPointView from '../view/trip-point-view.js';
 import FormView from '../view/form-view';
+import { UserAction, UpdateType } from '../const';
+import { isDatesEqual } from '../utils/utils';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -50,6 +52,7 @@ export default class PointPresenter {
         point: this.#point,
         pointDestinations: this.#destinationsModel.destinations,
         pointOffers: this.#offersModel.offers,
+        isEditMode: false,
         onFormSubmit: this.#handleFormSubmit,
         onDeleteClick: this.#handleDeleteClick,
         onToggleClick: this.#handleToggleClose,
@@ -96,11 +99,19 @@ export default class PointPresenter {
 
   #handleFormSubmit = (updatedPoint) => {
     this.#replaceFromFormToItem();
-    this.#handlePointUpdate(updatedPoint);
+    this.#handlePointUpdate(
+      UserAction.UPDATE_POINT,
+      isDatesEqual(this.#point.dateFrom, updatedPoint.dateFrom) ? UpdateType.MINOR : UpdateType.PATCH,
+      updatedPoint,
+    );
   };
 
   #handleFavoriteClick = () => {
-    this.#handlePointUpdate({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handlePointUpdate(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
   };
 
   #handleToggleClose = () => {
@@ -111,8 +122,11 @@ export default class PointPresenter {
     this.#replaceFromItemToForm();
   };
 
-  #handleDeleteClick = () => {
-    this.#removeForm();
+  #handleDeleteClick = (point) => {
+    this.#handlePointUpdate(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point);
   };
 
   #replaceFromItemToForm() {
@@ -126,11 +140,6 @@ export default class PointPresenter {
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
-  }
-
-  #removeForm() {
-    remove(this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 }
 

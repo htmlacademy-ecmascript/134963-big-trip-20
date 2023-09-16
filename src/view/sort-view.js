@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { SortType } from '../const.js';
 
-const createSortTemplate = () => (
+const createSortTemplate = (currentSortType) => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <div class="trip-sort__item  trip-sort__item--day">
         <input 
@@ -12,6 +12,7 @@ const createSortTemplate = () => (
         name="trip-sort" 
         value="sort-day"
         data-sort-type="${SortType.DEFAULT}"
+        ${currentSortType === SortType.DEFAULT ? 'checked' : ''}
         >
         <label class="trip-sort__btn" for="sort-day">Day</label>
       </div>
@@ -36,6 +37,7 @@ const createSortTemplate = () => (
           name="trip-sort" 
           value="sort-time"
           data-sort-type="${SortType.TIME_DESC}"
+          ${currentSortType === SortType.TIME_DESC ? 'checked' : ''}
         >
         <label class="trip-sort__btn" for="sort-time">Time</label>
       </div>
@@ -48,7 +50,7 @@ const createSortTemplate = () => (
           name="trip-sort" 
           value="sort-price"
           data-sort-type="${SortType.PRICE_DESC}"
-          checked
+          ${currentSortType === SortType.PRICE_DESC ? 'checked' : ''}
         >
         <label class="trip-sort__btn" for="sort-price">Price</label>
       </div>
@@ -69,19 +71,20 @@ const createSortTemplate = () => (
 
 export default class SortView extends AbstractView {
   #handleSortTypeChange = null;
+  #currentSortType = null;
 
-  constructor({ onSortTypeChange }) {
+  constructor({ onSortTypeChange, currentSortType }) {
     super();
+    this.#currentSortType = currentSortType;
     this.#handleSortTypeChange = onSortTypeChange;
     this.element.addEventListener('change', this.#sortTypeChangeHandler);
   }
 
   #sortTypeChangeHandler = (evt) => {
-    //evt.preventDefault();
     this.#handleSortTypeChange(evt.target.dataset.sortType);
   };
 
   get template() {
-    return createSortTemplate();
+    return createSortTemplate(this.#currentSortType);
   }
 }

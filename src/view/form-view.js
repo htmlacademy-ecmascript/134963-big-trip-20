@@ -1,6 +1,7 @@
+import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeTripDueDate } from '../utils/utils.js';
-import { DATE_FORMAT } from '../const.js';
+import { DATE_FORMAT, POINT_EMPTY } from '../const.js';
 import {capitalizeFirstLetter} from '../utils/common.js';
 
 const createViewDestinationPhoto = (photos) => {
@@ -27,7 +28,7 @@ const createOffersListTemplate = (offersByType, offers) => offersByType.map((cur
         name="event-offer-mockid-${currentOffer.id}" 
         ${offers.some((selectedOption) => selectedOption === currentOffer.id) ? 'checked' : ''}>
       <label class="event__offer-label" for="event-offer-mockid-${currentOffer.id}">
-        <span class="event__offer-title">${currentOffer.title}</span>
+        <span class="event__offer-title">${he.encode(currentOffer.title)}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${currentOffer.price}</span>
       </label>
@@ -64,11 +65,22 @@ const createTypesListTemplate = (offerTypes, type) => {
      </div>`);
 };
 
-const createFormTemplate = ({ point , pointDestinations, pointOffers }) => {
+function createToggleButton(isEditMode) {
+  if (isEditMode) {
+    return '';
+  } else {
+    return `<button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+      </button>`;
+  }
+}
+
+const createFormTemplate = ({ point , pointDestinations, pointOffers, isEditMode }) => {
   const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
   const offersByType = pointOffers.find((item) => item.type === type).offers;
-  const currentDestination = pointDestinations.find((waypoint) => waypoint.id === destination);
-  const destinationName = pointDestinations.find((waypoint) => waypoint.id === destination).name;
+  const destinationDescription = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).description : '';
+  const destinationName = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).name : '';
+  const destinationPicture = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).pictures : [];
   const destinationList = createDatalist(pointDestinations);
   return (
     `<li class="trip-events__item">
@@ -84,7 +96,7 @@ const createFormTemplate = ({ point , pointDestinations, pointOffers }) => {
               id="event-destination-1" 
               type="text" 
               name="event-destination" 
-              value="${destinationName}" 
+              value="${he.encode(destinationName)}" 
               list="destination-list-1"
             >
             ${destinationList}
@@ -125,8 +137,8 @@ const createFormTemplate = ({ point , pointDestinations, pointOffers }) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
-          <button class="event__rollup-btn" type="button">
+          <button class="event__reset-btn" type="reset">${isEditMode ? 'Delete' : 'Cancel'}</button>
+          ${createToggleButton(isEditMode)}
         </header>
         <section class="event__details">
           <section class="event__section  event__section--offers">
@@ -139,10 +151,10 @@ const createFormTemplate = ({ point , pointDestinations, pointOffers }) => {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${currentDestination.description}</p>
+            <p class="event__destination-description">${he.encode(destinationDescription)}</p>
 
             <div class="event__photos-container">
-              ${createViewDestinationPhoto(currentDestination.pictures)}
+              ${createViewDestinationPhoto(destinationPicture)}
             </div>     
           </section>
         </section>
@@ -158,15 +170,24 @@ export default class FormView extends AbstractStatefulView{
   #handleFormSubmit = null;
   #handleDeleteClick = null;
   #handleToggleClick = null;
+  #isEditMode = null;
 
 
-  constructor({ point, pointDestinations, pointOffers, onFormSubmit, onDeleteClick, onToggleClick}) {
+  constructor({ point = POINT_EMPTY,
+    pointDestinations,
+    pointOffers,
+    onFormSubmit,
+    onDeleteClick,
+    onToggleClick,
+    isEditMode
+  }) {
     super();
     this.#pointDestinations = pointDestinations;
     this.#pointOffers = pointOffers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
     this.#handleToggleClick = onToggleClick;
+    this.#isEditMode = isEditMode;
 
     this._setState(FormView.parsePointToState(point));
 
@@ -177,18 +198,42 @@ export default class FormView extends AbstractStatefulView{
     return createFormTemplate({
       point: this._state,
       pointDestinations: this.#pointDestinations,
-      pointOffers: this.#pointOffers
+      pointOffers: this.#pointOffers,
+      isEditMode: this.#isEditMode
     });
   }
 
+
+  reset(point) {
+    this.updateElement(
+      FormView.parsePointToState(point),
+    );
+  }
+
   #setInnerHandlers() {
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#toggleClickHandler);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeInputChange);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputChange);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerClickHandler);
+    this.element
+      .querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+
+    this.element
+      .querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+
+    if (this.element.querySelector('.event__rollup-btn')){
+      this.element
+        .querySelector('.event__rollup-btn').addEventListener('click', this.#toggleClickHandler);
+    }
+
+    this.element
+      .querySelector('.event__type-group').addEventListener('change', this.#typeInputChange);
+
+    this.element
+      .querySelector('.event__input--price').addEventListener('input', this.#priceInputChange);
+
+    this.element
+      .querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+
+    this.element
+      .querySelector('.event__available-offers').addEventListener('change', this.#offerClickHandler);
+
   }
 
   _restoreHandlers() {
@@ -210,7 +255,7 @@ export default class FormView extends AbstractStatefulView{
 
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleDeleteClick();
+    this.#handleDeleteClick(FormView.parseStateToPoint(this._state));
   };
 
   #toggleClickHandler = (evt) => {
@@ -274,15 +319,7 @@ export default class FormView extends AbstractStatefulView{
 
   static parsePointToState = (point) => ({...point});
 
-
   static parseStateToPoint = (state) => state;
-
-  reset(point) {
-    this.updateElement(
-      FormView.parsePointToState(point),
-    );
-
-  }
 
 }
 
