@@ -137,7 +137,7 @@ const createFormTemplate = ({ point , pointDestinations, pointOffers, isEditMode
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">${isEditMode ? 'Delete' : 'Cancel'}</button>
+          <button class="event__reset-btn" type="reset">${isEditMode ? 'Cancel' : 'Delete'}</button>
           ${createToggleButton(isEditMode)}
         </header>
         <section class="event__details">
