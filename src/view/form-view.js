@@ -7,11 +7,22 @@ import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
-const createViewDestinationPhoto = (photos) => {
-  const photoList = photos.map((photo) => (
+const createViewDestinationPhoto = (destinationPicture, destinationDescription) => {
+  const photoList = (destinationPicture.length === 0) ? ' ' : destinationPicture.map((photo) => (
     `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)).join('');
 
-  return `<div class="event__photos-tape">${photoList}</div>`;
+  if (destinationPicture.length === 0) {
+    return '';
+  } return (
+    `<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${he.encode(destinationDescription)}</p>
+
+     <div class="event__photos-container">
+      ${photoList}
+    </div>     
+    </section>`
+  );
 };
 
 const createDatalist = (pointDestinations) => {
@@ -21,6 +32,7 @@ const createDatalist = (pointDestinations) => {
     `<datalist id="destination-list-1">${dataList}</datalist>`
   );
 };
+
 const createOffersListTemplate = (offersByType, offers) => offersByType.map((currentOffer) => (
   `<div class="event__offer-selector">
       <input class="event__offer-checkbox  
@@ -37,6 +49,20 @@ const createOffersListTemplate = (offersByType, offers) => offersByType.map((cur
       </label>
       </div>`
 )).join('');
+
+const createOffersList = (offersByType, offers) => {
+  if (offersByType.length === 0) {
+    return '';
+  } return (
+    ` <section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+      <div class="event__available-offers">
+        ${createOffersListTemplate(offersByType, offers)}
+      </div>
+  </section>`
+  );
+};
 
 const createTypesListTemplate = (offerTypes, type) => {
   const offerType = (offerTypes.length === 0) ? '' :
@@ -68,6 +94,19 @@ const createTypesListTemplate = (offerTypes, type) => {
      </div>`);
 };
 
+const createEventDetailsSection = (offersByType, offers, destinationPicture, destinationDescription) => {
+  if (offersByType.length === 0 && destinationPicture.length === 0) {
+    return '';
+  } else {
+    return (
+      `<section class="event__details">
+        ${createOffersList(offersByType, offers)}
+        ${createViewDestinationPhoto(destinationPicture, destinationDescription)}
+      </section>`
+    );
+  }
+};
+
 function createToggleButton(isEditMode) {
   if (isEditMode) {
     return '';
@@ -77,6 +116,7 @@ function createToggleButton(isEditMode) {
       </button>`;
   }
 }
+
 
 const createFormTemplate = ({ point , pointDestinations, pointOffers, isEditMode }) => {
   const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
@@ -143,24 +183,7 @@ const createFormTemplate = ({ point , pointDestinations, pointOffers, isEditMode
           <button class="event__reset-btn" type="reset">${isEditMode ? 'Cancel' : 'Delete'}</button>
           ${createToggleButton(isEditMode)}
         </header>
-        <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-          <div class="event__available-offers">
-            ${createOffersListTemplate(offersByType, offers)}
-          </div>
-          </section>
-
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${he.encode(destinationDescription)}</p>
-
-            <div class="event__photos-container">
-              ${createViewDestinationPhoto(destinationPicture)}
-            </div>     
-          </section>
-        </section>
+        ${createEventDetailsSection(offersByType, offers, destinationPicture, destinationDescription)}
       </form>
     </li>`
   );
@@ -250,8 +273,11 @@ export default class FormView extends AbstractStatefulView{
     this.element
       .querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
 
-    this.element
-      .querySelector('.event__available-offers').addEventListener('change', this.#offerClickHandler);
+    // Если пабает ошибка, что контейнер отсутствует в разметке ставится заглушка на обработчит
+    if (this.element.querySelector('.event__available-offers')) {
+      this.element
+        .querySelector('.event__available-offers').addEventListener('change', this.#offerClickHandler);
+    }
 
     this.#setDatepicker();
 
