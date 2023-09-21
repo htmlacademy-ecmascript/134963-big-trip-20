@@ -62,6 +62,11 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+};
+
 export {
   TYPES,
   DESCRIPTIONS,
@@ -72,6 +77,7 @@ export {
   FilterType,
   SortType,
   UserAction,
-  UpdateType
+  UpdateType,
+  Method
 };
 
