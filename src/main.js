@@ -9,6 +9,11 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import NewTaskButtonView from './view/new-task-button-view.js';
 import {render} from './framework/render.js';
+import TripApiService from './service/trip-api-service.js';
+
+
+const AUTHORIZATION = 'Basic hS2sfS24wcl1sa2j';
+const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
 
 const tripContainer = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
@@ -16,7 +21,9 @@ const tripFilterContainer = document.querySelector('.trip-controls__filters');
 // const filterContainer = document.querySelector('');
 
 const mockService = new MockService();
-const pointsModel = new PointsModel(mockService);
+const pointsModel = new PointsModel({
+  service: new TripApiService(END_POINT, AUTHORIZATION)
+});
 const offersModel = new OffersModel(mockService);
 const filterModel = new FilterModel();
 const destinationsModel = new DestinationsModel(mockService);
