@@ -19,7 +19,9 @@ const createViewDestinationPhoto = (destinationPicture, destinationDescription) 
     <p class="event__destination-description">${he.encode(destinationDescription)}</p>
 
      <div class="event__photos-container">
-      ${photoList}
+      <div class="event__photos-tape">
+       ${photoList}
+      </div>
     </div>     
     </section>`
   );
