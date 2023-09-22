@@ -68,4 +68,6 @@ render(newEventButtonComponent, tripMainElement);
 headerPresenter.init();
 tripPresenter.init();
 filterPresenter.init();
-pointsModel.init();
+pointsModel.init().finally(() => {
+  render(newEventButtonComponent, tripMainElement);
+});
