@@ -2,7 +2,7 @@ import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeTripDueDate } from '../utils/utils.js';
 import { DATE_FORMAT, POINT_EMPTY } from '../const.js';
-import {capitalizeFirstLetter} from '../utils/common.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
 import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
@@ -15,14 +15,14 @@ const createViewDestinationPhoto = (destinationPicture, destinationDescription) 
     return '';
   } return (
     `<section class="event__section  event__section--destination">
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${he.encode(destinationDescription)}</p>
+     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+     <p class="event__destination-description">${he.encode(destinationDescription)}</p>
 
      <div class="event__photos-container">
       <div class="event__photos-tape">
        ${photoList}
       </div>
-    </div>     
+     </div>     
     </section>`
   );
 };
@@ -55,7 +55,8 @@ const createOffersListTemplate = (offersByType, offers) => offersByType.map((cur
 const createOffersList = (offersByType, offers) => {
   if (offersByType.length === 0) {
     return '';
-  } return (
+  }
+  return (
     ` <section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
@@ -99,14 +100,13 @@ const createTypesListTemplate = (offerTypes, type) => {
 const createEventDetailsSection = (offersByType, offers, destinationPicture, destinationDescription) => {
   if (offersByType.length === 0 && destinationPicture.length === 0) {
     return '';
-  } else {
-    return (
-      `<section class="event__details">
+  }
+  return (
+    `<section class="event__details">
         ${createOffersList(offersByType, offers)}
         ${createViewDestinationPhoto(destinationPicture, destinationDescription)}
       </section>`
-    );
-  }
+  );
 };
 
 function createToggleButton(isEditMode) {
@@ -120,7 +120,7 @@ function createToggleButton(isEditMode) {
 }
 
 
-const createFormTemplate = ({ point , pointDestinations, pointOffers, isEditMode }) => {
+const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode }) => {
   const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
   const offersByType = pointOffers.find((item) => item.type === type).offers;
   const destinationDescription = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).description : '';
@@ -191,7 +191,7 @@ const createFormTemplate = ({ point , pointDestinations, pointOffers, isEditMode
   );
 };
 
-export default class FormView extends AbstractStatefulView{
+export default class FormView extends AbstractStatefulView {
   _state = null;
   #pointDestinations = null;
   #pointOffers = null;
@@ -261,7 +261,7 @@ export default class FormView extends AbstractStatefulView{
     this.element
       .querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
 
-    if (this.element.querySelector('.event__rollup-btn')){
+    if (this.element.querySelector('.event__rollup-btn')) {
       this.element
         .querySelector('.event__rollup-btn').addEventListener('click', this.#toggleClickHandler);
     }
@@ -275,7 +275,7 @@ export default class FormView extends AbstractStatefulView{
     this.element
       .querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
 
-    // Если пабает ошибка, что контейнер отсутствует в разметке ставится заглушка на обработчит
+    // Если падает ошибка, что контейнер отсутствует в разметке ставится заглушка на обработчик
     if (this.element.querySelector('.event__available-offers')) {
       this.element
         .querySelector('.event__available-offers').addEventListener('change', this.#offerClickHandler);
@@ -327,7 +327,7 @@ export default class FormView extends AbstractStatefulView{
 
   #typeInputChange = (evt) => {
     evt.preventDefault();
-    this.updateElement ({
+    this.updateElement({
       type: evt.target.value,
       offers: [],
     });
@@ -358,7 +358,7 @@ export default class FormView extends AbstractStatefulView{
     }
     const selectedDestinationId = selectedDestinationObject.id;
 
-    this.updateElement ({destination: selectedDestinationId});
+    this.updateElement({ destination: selectedDestinationId });
   };
 
   #offerClickHandler = (evt) => {
@@ -386,6 +386,7 @@ export default class FormView extends AbstractStatefulView{
     this.#datePickerFrom = flatpickr(dateFromInput, {
       dateFormat: 'd/m/y H:i',
       enableTime: true,
+      time_24hr: true,
       maxDate: this._state.dateTo,
       onChange: this.#dateFromChangeHandler,
     });
@@ -393,12 +394,13 @@ export default class FormView extends AbstractStatefulView{
     this.#datePickerTo = flatpickr(dateToInput, {
       dateFormat: 'd/m/y H:i',
       enableTime: true,
+      time_24hr: true,
       minDate: this._state.dateFrom,
       onChange: this.#dateToChangeHandler,
     });
   }
 
-  static parsePointToState = (point) => ({...point});
+  static parsePointToState = (point) => ({ ...point });
 
   static parseStateToPoint = (state) => state;
 

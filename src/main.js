@@ -16,7 +16,6 @@ const tripApiService = new TripApiService(END_POINT, AUTHORIZATION);
 const tripContainer = document.querySelector('.trip-events');
 const tripMainElement = document.querySelector('.trip-main');
 const tripFilterContainer = document.querySelector('.trip-controls__filters');
-// const filterContainer = document.querySelector('');
 
 const offersModel = new OffersModel(tripApiService);
 const filterModel = new FilterModel();
