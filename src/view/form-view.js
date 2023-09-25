@@ -275,10 +275,11 @@ export default class FormView extends AbstractStatefulView {
     this.element
       .querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
 
-    // Если падает ошибка, что контейнер отсутствует в разметке ставится заглушка на обработчик
-    if (this.element.querySelector('.event__available-offers')) {
-      this.element
-        .querySelector('.event__available-offers').addEventListener('change', this.#offerClickHandler);
+    // Если падает ошибка, что контейнер отсутствует в разметке, ставится заглушка на обработчик
+    const offersContainer = this.element.querySelector('.event__available-offers');
+
+    if (offersContainer) {
+      offersContainer.addEventListener('change', this.#offerClickHandler);
     }
 
     this.#setDatepicker();
@@ -386,7 +387,7 @@ export default class FormView extends AbstractStatefulView {
     this.#datePickerFrom = flatpickr(dateFromInput, {
       dateFormat: 'd/m/y H:i',
       enableTime: true,
-      time_24hr: true,
+      'time_24hr': true,
       maxDate: this._state.dateTo,
       onChange: this.#dateFromChangeHandler,
     });
@@ -394,7 +395,7 @@ export default class FormView extends AbstractStatefulView {
     this.#datePickerTo = flatpickr(dateToInput, {
       dateFormat: 'd/m/y H:i',
       enableTime: true,
-      time_24hr: true,
+      'time_24hr': true,
       minDate: this._state.dateFrom,
       onChange: this.#dateToChangeHandler,
     });

@@ -17,11 +17,10 @@ export default class TripApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
-
   async updatePoint(point) {
     const response = await this._load({
       url: `points/${point.id}`,
-      Method: Method.PUT,
+      method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
