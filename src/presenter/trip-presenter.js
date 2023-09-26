@@ -4,6 +4,7 @@ import EmptyView from '../view/list-empty-view.js';
 import NewEventPresenter from './new-event-presenter.js';
 import PointPresenter from './point-presenter.js';
 import LoadingView from '../view/loading-view.js';
+import FilterPresenter from './filter-presenter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortByPriceDesc , sortByTimeDesc, sortByDateFrom } from '../utils/sort.js';
 import { remove, render} from '../framework/render.js';
@@ -16,6 +17,8 @@ export default class TripPresenter {
   #offersModel = null;
   #destinationsModel = null;
   #filterModel = null;
+  #tripFilterContainer = null;
+  #tripMainElement = null;
 
 
   #currentSortType = SortType.DEFAULT;
@@ -30,12 +33,14 @@ export default class TripPresenter {
   #newEventPresenter = null;
   #isLoading = true;
 
-  constructor({ tripContainer, pointsModel, offersModel, destinationsModel, filterModel, onNewEventDestroy }) {
+  constructor({ tripContainer, tripFilterContainer, tripMainElement, pointsModel, offersModel, destinationsModel, filterModel, onNewEventDestroy }) {
     this.#tripContainer = tripContainer;
     this.#pointsModel = pointsModel;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
     this.#filterModel = filterModel;
+    this.#tripFilterContainer = tripFilterContainer;
+    this.#tripMainElement = tripMainElement;
 
     this.#newEventPresenter = new NewEventPresenter({
       destinations: this.#destinationsModel,
@@ -67,6 +72,7 @@ export default class TripPresenter {
 
   init() {
     this.#renderTripPoint();
+    this.#renderFilters();
   }
 
   #renderTripPointList() {
@@ -117,6 +123,16 @@ export default class TripPresenter {
 
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
+  }
+
+  #renderFilters() {
+    const filterPresenter = new FilterPresenter({
+      filterContainer: this.#tripFilterContainer,
+      filterModel: this.#filterModel,
+      pointsModel: this.#pointsModel,
+    });
+
+    filterPresenter.init();
   }
 
   #renderLoading() {
