@@ -5,8 +5,6 @@ import PointsModel from './model/points-model.js';
 import OffersModel from './model/offers-model.js';
 import DestinationsModel from './model/destination-model.js';
 import FilterModel from './model/filter-model.js';
-import NewTaskButtonView from './view/new-task-button-view.js';
-import {render} from './framework/render.js';
 import TripApiService from './service/trip-api-service.js';
 import { AUTHORIZATION, END_POINT } from './const.js';
 
@@ -28,11 +26,11 @@ const pointsModel = new PointsModel({
 const tripPresenter = new TripPresenter({
   tripContainer: tripContainer,
   tripFilterContainer: tripFilterContainer,
+  tripMainElement: tripMainElement,
   destinationsModel,
   pointsModel,
   offersModel,
   filterModel,
-  onNewEventDestroy: handleNewEventFormClose
 });
 
 const headerPresenter = new HeaderPresenter({
@@ -42,24 +40,6 @@ const headerPresenter = new HeaderPresenter({
 });
 
 
-const newEventButtonComponent = new NewTaskButtonView({
-  onClick: handleNewEventButtonClick
-});
-
-function handleNewEventFormClose() {
-  newEventButtonComponent.element.disabled = false;
-}
-
-function handleNewEventButtonClick() {
-  tripPresenter.createPoint();
-  newEventButtonComponent.element.disabled = true;
-}
-
-render(newEventButtonComponent, tripMainElement);
-
-
 headerPresenter.init();
 tripPresenter.init();
-pointsModel.init().finally(() => {
-  render(newEventButtonComponent, tripMainElement);
-});
+pointsModel.init();

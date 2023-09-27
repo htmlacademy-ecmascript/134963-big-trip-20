@@ -5,6 +5,7 @@ import NewEventPresenter from './new-event-presenter.js';
 import PointPresenter from './point-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import FilterPresenter from './filter-presenter.js';
+import NewTaskButtonView from '../view/new-task-button-view.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortByPriceDesc , sortByTimeDesc, sortByDateFrom } from '../utils/sort.js';
 import { remove, render} from '../framework/render.js';
@@ -26,6 +27,7 @@ export default class TripPresenter {
 
   #tripListComponent = new TripPointsListView();
   #loadingComponent = new LoadingView();
+  #newEventButtonComponent = null;
   #sortComponent = null;
   #emptyListComponent = null;
 
@@ -33,7 +35,7 @@ export default class TripPresenter {
   #newEventPresenter = null;
   #isLoading = true;
 
-  constructor({ tripContainer, tripFilterContainer, tripMainElement, pointsModel, offersModel, destinationsModel, filterModel, onNewEventDestroy }) {
+  constructor({ tripContainer, tripFilterContainer, tripMainElement, pointsModel, offersModel, destinationsModel, filterModel}) {
     this.#tripContainer = tripContainer;
     this.#pointsModel = pointsModel;
     this.#offersModel = offersModel;
@@ -47,7 +49,7 @@ export default class TripPresenter {
       offers: this.#offersModel,
       pointListContainer: this.#tripListComponent.element,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewEventDestroy,
+      onDestroy: this.#handleNewEventFormClose,
     });
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
@@ -73,6 +75,7 @@ export default class TripPresenter {
   init() {
     this.#renderTripPoint();
     this.#renderFilters();
+    this.#renderNewEventButton();
   }
 
   #renderTripPointList() {
@@ -137,6 +140,14 @@ export default class TripPresenter {
 
   #renderLoading() {
     render(this.#loadingComponent, this.#tripContainer);
+  }
+
+  #renderNewEventButton() {
+    this.#newEventButtonComponent = new NewTaskButtonView({
+      onClick: this.#handleNewEventButtonClick,
+    });
+
+    render(this.#newEventButtonComponent, this.#tripMainElement);
   }
 
   createPoint() {
@@ -211,6 +222,15 @@ export default class TripPresenter {
     this.#clearContainer();
     this.#renderTripPoint();
   };
+
+  #handleNewEventFormClose() {
+    this.#newEventButtonComponent.element.disabled = false;
+  }
+
+  #handleNewEventButtonClick() {
+    this.createPoint();
+    this.#newEventButtonComponent.element.disabled = true;
+  }
 }
 
 
