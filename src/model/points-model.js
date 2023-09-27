@@ -46,7 +46,7 @@ export default class PointsModel extends Observable {
       const updatedPoint = this.#adaptToClient(response);
       this.#points = [
         ...this.#points.slice(0, index),
-        update,
+        updatedPoint,
         ...this.#points.slice(index + 1),
       ];
       this._notify(updateType, updatedPoint);
@@ -81,8 +81,8 @@ export default class PointsModel extends Observable {
   #adaptToClient(point) {
     const adaptedPoint = {
       ...point,
-      dateFrom: point['date_from'],
-      dateTo: point['date_to'],
+      dateFrom: new Date(point['date_from']),
+      dateTo: new Date(point['date_to']),
       basePrice: point['base_price'],
       isFavorite: point['is_favorite'],
     };
