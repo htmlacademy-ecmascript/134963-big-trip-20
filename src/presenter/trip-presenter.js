@@ -223,14 +223,14 @@ export default class TripPresenter {
     this.#renderTripPoint();
   };
 
-  #handleNewEventFormClose() {
+  #handleNewEventFormClose = () => {
     this.#newEventButtonComponent.element.disabled = false;
-  }
+  };
 
-  #handleNewEventButtonClick() {
+  #handleNewEventButtonClick = () => {
     this.createPoint();
     this.#newEventButtonComponent.element.disabled = true;
-  }
+  };
 }
 
 
