@@ -3,6 +3,9 @@ import SortView from '../view/sort-view.js';
 import EmptyView from '../view/list-empty-view.js';
 import NewEventPresenter from './new-event-presenter.js';
 import PointPresenter from './point-presenter.js';
+import LoadingView from '../view/loading-view.js';
+import FilterPresenter from './filter-presenter.js';
+import NewTaskButtonView from '../view/new-task-button-view.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortByPriceDesc , sortByTimeDesc, sortByDateFrom } from '../utils/sort.js';
 import { remove, render} from '../framework/render.js';
@@ -15,31 +18,38 @@ export default class TripPresenter {
   #offersModel = null;
   #destinationsModel = null;
   #filterModel = null;
+  #tripFilterContainer = null;
+  #tripMainElement = null;
 
 
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.EVERYTHING;
 
   #tripListComponent = new TripPointsListView();
+  #loadingComponent = new LoadingView();
+  #newEventButtonComponent = null;
   #sortComponent = null;
   #emptyListComponent = null;
 
   #pointPresenters = new Map();
   #newEventPresenter = null;
+  #isLoading = true;
 
-  constructor({ tripContainer, pointsModel, offersModel, destinationsModel, filterModel, onNewEventDestroy }) {
+  constructor({ tripContainer, tripFilterContainer, tripMainElement, pointsModel, offersModel, destinationsModel, filterModel}) {
     this.#tripContainer = tripContainer;
     this.#pointsModel = pointsModel;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
     this.#filterModel = filterModel;
+    this.#tripFilterContainer = tripFilterContainer;
+    this.#tripMainElement = tripMainElement;
 
     this.#newEventPresenter = new NewEventPresenter({
       destinations: this.#destinationsModel,
       offers: this.#offersModel,
       pointListContainer: this.#tripListComponent.element,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewEventDestroy,
+      onDestroy: this.#handleNewEventFormClose,
     });
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
@@ -64,6 +74,8 @@ export default class TripPresenter {
 
   init() {
     this.#renderTripPoint();
+    this.#renderFilters();
+    this.#renderNewEventButton();
   }
 
   #renderTripPointList() {
@@ -89,6 +101,11 @@ export default class TripPresenter {
   #renderTripPoint() {
     const points = this.points;
 
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (points.length === 0) {
       this.#renderEmptyList();
       return;
@@ -96,7 +113,64 @@ export default class TripPresenter {
     this.#renderTripPointSort();
     this.#renderTripPointList();
     points.forEach((point) => this.#renderPoint(point));
+  }
 
+  #renderPoint(point) {
+    const pointPresenter = new PointPresenter({
+      pointListComponent: this.#tripListComponent.element,
+      destinationsModel: this.#destinationsModel,
+      offersModel: this.#offersModel,
+      onDataChange: this.#handleViewAction,
+      onModeChange: this.#handleModeChange,
+    });
+
+    pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
+  }
+
+  #renderFilters() {
+    const filterPresenter = new FilterPresenter({
+      filterContainer: this.#tripFilterContainer,
+      filterModel: this.#filterModel,
+      pointsModel: this.#pointsModel,
+    });
+
+    filterPresenter.init();
+  }
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#tripContainer);
+  }
+
+  #renderNewEventButton() {
+    this.#newEventButtonComponent = new NewTaskButtonView({
+      onClick: this.#handleNewEventButtonClick,
+    });
+
+    render(this.#newEventButtonComponent, this.#tripMainElement);
+  }
+
+  createPoint() {
+    this.#currentSortType = SortType.DEFAULT;
+    this.#filterModel.setFilters(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newEventPresenter.init();
+  }
+
+  #clearContainer({resetSortType = false} = {}) {
+    this.#newEventPresenter.destroy();
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#loadingComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DEFAULT;
+    }
+
+    if (this.#emptyListComponent) {
+      remove(this.#emptyListComponent);
+    }
   }
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -126,43 +200,13 @@ export default class TripPresenter {
         this.#clearContainer({resetSortType:true});
         this.#renderTripPoint();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderTripPoint();
+        break;
     }
   };
-
-  #renderPoint(point) {
-    const pointPresenter = new PointPresenter({
-      pointListComponent: this.#tripListComponent.element,
-      destinationsModel: this.#destinationsModel,
-      offersModel: this.#offersModel,
-      onDataChange: this.#handleViewAction,
-      onModeChange: this.#handleModeChange,
-    });
-
-    pointPresenter.init(point);
-    this.#pointPresenters.set(point.id, pointPresenter);
-  }
-
-  createPoint() {
-    this.#currentSortType = SortType.DEFAULT;
-    this.#filterModel.setFilters(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newEventPresenter.init();
-  }
-
-  #clearContainer({resetSortType = false} = {}) {
-    this.#newEventPresenter.destroy();
-    this.#pointPresenters.forEach((presenter) => presenter.destroy());
-    this.#pointPresenters.clear();
-
-    remove(this.#sortComponent);
-
-    if (resetSortType) {
-      this.#currentSortType = SortType.DEFAULT;
-    }
-
-    if (this.#emptyListComponent) {
-      remove(this.#emptyListComponent);
-    }
-  }
 
   #handleModeChange = () => {
     this.#newEventPresenter.destroy();
@@ -177,6 +221,15 @@ export default class TripPresenter {
 
     this.#clearContainer();
     this.#renderTripPoint();
+  };
+
+  #handleNewEventFormClose = () => {
+    this.#newEventButtonComponent.element.disabled = false;
+  };
+
+  #handleNewEventButtonClick = () => {
+    this.createPoint();
+    this.#newEventButtonComponent.element.disabled = true;
   };
 }
 

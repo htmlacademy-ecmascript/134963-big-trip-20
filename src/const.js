@@ -31,6 +31,11 @@ const POINT_EMPTY = {
   type: DEFAULT_TYPE,
 };
 
+
+const AUTHORIZATION = 'Basic hS2sfS24wcl1sa2j';
+
+const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
+
 const Duration = {
   MIN: 59,
   DAY: 7,
@@ -60,6 +65,13 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+};
+
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
 };
 
 export {
@@ -68,10 +80,13 @@ export {
   CITES,
   POINT_EMPTY,
   DATE_FORMAT,
+  AUTHORIZATION,
+  END_POINT,
   Duration,
   FilterType,
   SortType,
   UserAction,
-  UpdateType
+  UpdateType,
+  Method
 };
 
