@@ -67,7 +67,7 @@ const createOffersList = (offersByType, offers) => {
   );
 };
 
-const createTypesListTemplate = (offerTypes, type) => {
+const createTypesListTemplate = (offerTypes, type, isDisabled) => {
   const offerType = (offerTypes.length === 0) ? '' :
     offerTypes.map((item) => (
       `<div class="event__type-item">
@@ -78,6 +78,7 @@ const createTypesListTemplate = (offerTypes, type) => {
         name="event-type" 
         value="${item.type}"
         ${(item.type === type) ? 'checked' : ''}
+        ${isDisabled ? 'disabled' : ''}
       >
       <label class="event__type-label  event__type-label--${item.type}" for="event-type-${item.type}-1">${capitalizeFirstLetter(item.type)}</label>
      </div>`)).join('');
@@ -136,7 +137,7 @@ function createDeletingButtonText(isEditMode, isDeleting) {
 
 
 const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode }) => {
-  const { dateFrom, dateTo, type, basePrice, destination, offers, isDeleting, isSaving } = point;
+  const { dateFrom, dateTo, type, basePrice, destination, offers, isDeleting, isSaving, isDisabled } = point;
   const offersByType = pointOffers.find((item) => item.type === type).offers;
   const destinationDescription = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).description : '';
   const destinationName = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).name : '';
@@ -146,7 +147,7 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
-        ${createTypesListTemplate(pointOffers, type)}    
+        ${createTypesListTemplate(pointOffers, type, isDisabled)}    
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
@@ -158,6 +159,7 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
               name="event-destination" 
               value="${he.encode(destinationName)}" 
               list="destination-list-1"
+              ${isDisabled ? 'disabled' : ''}
             >
             ${destinationList}
           </div>
@@ -170,6 +172,7 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
               type="text" 
               name="event-start-time" 
               value="${humanizeTripDueDate(dateFrom, DATE_FORMAT.DAY_MONTH_YEAR_TIME_SLASHED)}"
+              ${isDisabled ? 'disabled' : ''}
             >
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
@@ -178,6 +181,7 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
               id="event-end-time-1" 
               type="text"
               name="event-end-time"
+              ${isDisabled ? 'disabled' : ''}
               value="${humanizeTripDueDate(dateTo, DATE_FORMAT.DAY_MONTH_YEAR_TIME_SLASHED)}"
             >
           </div>
@@ -193,6 +197,7 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
               type="text" 
               name="event-price" 
               value="${basePrice}"
+              ${isDisabled ? 'disabled' : ''}
             >
           </div>
 
