@@ -115,7 +115,6 @@ export default class PointPresenter {
   };
 
   #handleToggleClose = () => {
-    this.#pointEditComponent.reset(this.#point);
     this.#replaceFromFormToItem();
   };
 

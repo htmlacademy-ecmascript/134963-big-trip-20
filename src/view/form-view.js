@@ -88,7 +88,12 @@ const createTypesListTemplate = (offerTypes, type) => {
           <span class="visually-hidden">Choose event type</span>
           <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
         </label>
-        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+        <input 
+         class="event__type-toggle
+         visually-hidden"
+         id="event-type-toggle-1"
+         type="checkbox"
+        >
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
@@ -119,9 +124,19 @@ function createToggleButton(isEditMode) {
   }
 }
 
+function createDeletingButtonText(isEditMode, isDeleting) {
+  if (isEditMode) {
+    return 'Cancel';
+  } else if (isDeleting) {
+    return 'Deleting...';
+  } else {
+    return 'Delete';
+  }
+}
+
 
 const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode }) => {
-  const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
+  const { dateFrom, dateTo, type, basePrice, destination, offers, isDeleting, isSaving } = point;
   const offersByType = pointOffers.find((item) => item.type === type).offers;
   const destinationDescription = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).description : '';
   const destinationName = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).name : '';
@@ -181,8 +196,8 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
             >
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">${isEditMode ? 'Cancel' : 'Delete'}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset">${createDeletingButtonText(isEditMode, isDeleting)}</button>
           ${createToggleButton(isEditMode)}
         </header>
         ${createEventDetailsSection(offersByType, offers, destinationPicture, destinationDescription)}
@@ -401,9 +416,21 @@ export default class FormView extends AbstractStatefulView {
     });
   }
 
-  static parsePointToState = (point) => ({ ...point });
+  static parsePointToState = (point) => ({
+    ...point,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
+  });
 
-  static parseStateToPoint = (state) => state;
+  static parseStateToPoint = (state) => {
+    const point = {...state};
 
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
+  };
 }
 
