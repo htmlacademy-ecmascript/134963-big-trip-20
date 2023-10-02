@@ -94,6 +94,7 @@ const createTypesListTemplate = (offerTypes, type, isDisabled) => {
          visually-hidden"
          id="event-type-toggle-1"
          type="checkbox"
+         ${isDisabled ? 'disabled' : ''}
         >
         <div class="event__type-list">
           <fieldset class="event__type-group">
