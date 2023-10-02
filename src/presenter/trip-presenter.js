@@ -1,4 +1,5 @@
 import TripPointsListView from '../view/trip-point-list-view.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import SortView from '../view/sort-view.js';
 import EmptyView from '../view/list-empty-view.js';
 import NewEventPresenter from './new-event-presenter.js';
@@ -11,6 +12,10 @@ import { sortByPriceDesc , sortByTimeDesc, sortByDateFrom } from '../utils/sort.
 import { remove, render} from '../framework/render.js';
 import {filter} from '../utils/filter.js';
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -20,6 +25,10 @@ export default class TripPresenter {
   #filterModel = null;
   #tripFilterContainer = null;
   #tripMainElement = null;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
 
   #currentSortType = SortType.DEFAULT;
@@ -174,6 +183,8 @@ export default class TripPresenter {
   }
 
   #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointPresenters.get(update.id).setSaving();
@@ -200,6 +211,8 @@ export default class TripPresenter {
         }
         break;
     }
+
+    this.#uiBlocker.block();
   };
 
   #handleModelEvent = (updateType, data) => {
