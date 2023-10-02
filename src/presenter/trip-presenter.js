@@ -212,7 +212,7 @@ export default class TripPresenter {
         break;
     }
 
-    this.#uiBlocker.block();
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
