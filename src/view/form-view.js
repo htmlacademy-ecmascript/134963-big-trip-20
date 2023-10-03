@@ -202,8 +202,8 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
             >
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
-          <button class="event__reset-btn" type="reset">${createDeletingButtonText(isEditMode, isDeleting)}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${createDeletingButtonText(isEditMode, isDeleting)}</button>
           ${createToggleButton(isEditMode)}
         </header>
         ${createEventDetailsSection(offersByType, offers, destinationPicture, destinationDescription)}
