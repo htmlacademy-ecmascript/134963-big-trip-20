@@ -67,7 +67,7 @@ const createOffersList = (offersByType, offers) => {
   );
 };
 
-const createTypesListTemplate = (offerTypes, type) => {
+const createTypesListTemplate = (offerTypes, type, isDisabled) => {
   const offerType = (offerTypes.length === 0) ? '' :
     offerTypes.map((item) => (
       `<div class="event__type-item">
@@ -78,6 +78,7 @@ const createTypesListTemplate = (offerTypes, type) => {
         name="event-type" 
         value="${item.type}"
         ${(item.type === type) ? 'checked' : ''}
+        ${isDisabled ? 'disabled' : ''}
       >
       <label class="event__type-label  event__type-label--${item.type}" for="event-type-${item.type}-1">${capitalizeFirstLetter(item.type)}</label>
      </div>`)).join('');
@@ -88,7 +89,13 @@ const createTypesListTemplate = (offerTypes, type) => {
           <span class="visually-hidden">Choose event type</span>
           <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
         </label>
-        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+        <input 
+         class="event__type-toggle
+         visually-hidden"
+         id="event-type-toggle-1"
+         type="checkbox"
+         ${isDisabled ? 'disabled' : ''}
+        >
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
@@ -119,9 +126,19 @@ function createToggleButton(isEditMode) {
   }
 }
 
+function createDeletingButtonText(isEditMode, isDeleting) {
+  if (isEditMode) {
+    return 'Cancel';
+  } else if (isDeleting) {
+    return 'Deleting...';
+  } else {
+    return 'Delete';
+  }
+}
+
 
 const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode }) => {
-  const { dateFrom, dateTo, type, basePrice, destination, offers } = point;
+  const { dateFrom, dateTo, type, basePrice, destination, offers, isDeleting, isSaving, isDisabled } = point;
   const offersByType = pointOffers.find((item) => item.type === type).offers;
   const destinationDescription = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).description : '';
   const destinationName = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).name : '';
@@ -131,7 +148,7 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
-        ${createTypesListTemplate(pointOffers, type)}    
+        ${createTypesListTemplate(pointOffers, type, isDisabled)}    
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
@@ -143,6 +160,7 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
               name="event-destination" 
               value="${he.encode(destinationName)}" 
               list="destination-list-1"
+              ${isDisabled ? 'disabled' : ''}
             >
             ${destinationList}
           </div>
@@ -155,6 +173,7 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
               type="text" 
               name="event-start-time" 
               value="${humanizeTripDueDate(dateFrom, DATE_FORMAT.DAY_MONTH_YEAR_TIME_SLASHED)}"
+              ${isDisabled ? 'disabled' : ''}
             >
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
@@ -163,6 +182,7 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
               id="event-end-time-1" 
               type="text"
               name="event-end-time"
+              ${isDisabled ? 'disabled' : ''}
               value="${humanizeTripDueDate(dateTo, DATE_FORMAT.DAY_MONTH_YEAR_TIME_SLASHED)}"
             >
           </div>
@@ -178,11 +198,12 @@ const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode 
               type="text" 
               name="event-price" 
               value="${basePrice}"
+              ${isDisabled ? 'disabled' : ''}
             >
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">${isEditMode ? 'Cancel' : 'Delete'}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${createDeletingButtonText(isEditMode, isDeleting)}</button>
           ${createToggleButton(isEditMode)}
         </header>
         ${createEventDetailsSection(offersByType, offers, destinationPicture, destinationDescription)}
@@ -401,9 +422,21 @@ export default class FormView extends AbstractStatefulView {
     });
   }
 
-  static parsePointToState = (point) => ({ ...point });
+  static parsePointToState = (point) => ({
+    ...point,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
+  });
 
-  static parseStateToPoint = (state) => state;
+  static parseStateToPoint = (state) => {
+    const point = {...state};
 
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
+    return point;
+  };
 }
 
