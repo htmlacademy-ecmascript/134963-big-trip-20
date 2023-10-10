@@ -1,8 +1,7 @@
 import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizeTripDueDate } from '../utils/utils.js';
+import { humanizeTripDueDate, capitalizeFirstLetter } from '../utils/utils.js';
 import { DATE_FORMAT, POINT_EMPTY } from '../const.js';
-import { capitalizeFirstLetter } from '../utils/common.js';
 import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
