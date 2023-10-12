@@ -1,4 +1,3 @@
-const TYPES = [ 'taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant' ];
 
 const DEFAULT_TYPE = 'flight';
 
@@ -24,12 +23,6 @@ const POINT_EMPTY = {
 const AUTHORIZATION = 'Basic hS2sfS24wcl1sa2j';
 
 const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
-
-const Duration = {
-  MIN: 59,
-  DAY: 7,
-  HOUR: 23
-};
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -66,12 +59,10 @@ const Method = {
 };
 
 export {
-  TYPES,
   POINT_EMPTY,
   DATE_FORMAT,
   AUTHORIZATION,
   END_POINT,
-  Duration,
   FilterType,
   SortType,
   UserAction,
