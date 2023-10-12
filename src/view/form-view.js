@@ -139,9 +139,12 @@ function createDeletingButtonText(isEditMode, isDeleting) {
 const createFormTemplate = ({ point, pointDestinations, pointOffers, isEditMode }) => {
   const { dateFrom, dateTo, type, basePrice, destination, offers, isDeleting, isSaving, isDisabled } = point;
   const offersByType = pointOffers.find((item) => item.type === type).offers;
-  const destinationDescription = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).description : '';
-  const destinationName = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).name : '';
-  const destinationPicture = (pointDestinations.length > 0 && destination !== null) ? pointDestinations.find((waypoint) => waypoint.id === destination).pictures : [];
+
+  const { description = '', name = '', pictures = [] } = pointDestinations.find((waypoint) => waypoint.id === destination) || {};
+
+  const destinationDescription = (pointDestinations.length > 0 && destination !== null) ? description : '';
+  const destinationName = (pointDestinations.length > 0 && destination !== null) ? name : '';
+  const destinationPicture = (pointDestinations.length > 0 && destination !== null) ? pictures : [];
   const destinationList = createDatalist(pointDestinations);
   return (
     `<li class="trip-events__item">
