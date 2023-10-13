@@ -1,6 +1,5 @@
 
 import TripPresenter from './presenter/trip-presenter.js';
-import HeaderPresenter from './presenter/header-presenter.js';
 import PointsModel from './model/points-model.js';
 import OffersModel from './model/offers-model.js';
 import DestinationsModel from './model/destination-model.js';
@@ -33,13 +32,5 @@ const tripPresenter = new TripPresenter({
   filterModel,
 });
 
-const headerPresenter = new HeaderPresenter({
-  headerContainer: tripMainElement,
-  pointsModel,
-  filterContainer: tripFilterContainer,
-});
-
-
-headerPresenter.init();
 tripPresenter.init();
 pointsModel.init();

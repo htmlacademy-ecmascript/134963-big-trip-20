@@ -6,6 +6,7 @@ import NewEventPresenter from './new-event-presenter.js';
 import PointPresenter from './point-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import FilterPresenter from './filter-presenter.js';
+import HeaderPresenter from './header-presenter.js';
 import NewTaskButtonView from '../view/new-task-button-view.js';
 import ErrorView from '../view/error-view.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
@@ -122,6 +123,7 @@ export default class TripPresenter {
       this.#renderEmptyList();
       return;
     }
+    this.#renderHeaderPresenter();
     this.#renderTripPointSort();
     this.#renderTripPointList();
     points.forEach((point) => this.#renderPoint(point));
@@ -148,6 +150,12 @@ export default class TripPresenter {
     });
 
     filterPresenter.init();
+  }
+
+  #renderHeaderPresenter() {
+    const headerPresenter = new HeaderPresenter({ headerContainer: this.#tripMainElement});
+
+    headerPresenter.init();
   }
 
   #renderLoading() {
