@@ -20,7 +20,7 @@ const POINT_EMPTY = {
 };
 
 
-const AUTHORIZATION = 'Basic hS2sfS24wcl1sa2j';
+const AUTHORIZATION = 'Basic hS2saS24wcl1sa2j';
 
 const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
 
