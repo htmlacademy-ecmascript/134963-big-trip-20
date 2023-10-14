@@ -89,6 +89,7 @@ export default class TripPresenter {
     this.#renderTripPoint();
     this.#renderFilters();
     this.#renderNewEventButton();
+    this.#renderHeaderPresenter();
   }
 
   #renderTripPointList() {
@@ -123,7 +124,6 @@ export default class TripPresenter {
       this.#renderEmptyList();
       return;
     }
-    this.#renderHeaderPresenter();
     this.#renderTripPointSort();
     this.#renderTripPointList();
     points.forEach((point) => this.#renderPoint(point));
