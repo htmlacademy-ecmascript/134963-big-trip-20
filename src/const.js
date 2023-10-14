@@ -1,15 +1,3 @@
-const TYPES = [ 'taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant' ];
-
-const DESCRIPTIONS = [
-  'Здесь много интересных и красивых мест, разных памятников.',
-  'В городе построено много красивых, современных зданий, которые своим видом нисколько не портят сохранившуюся архитектуру.',
-  'В разных районах города есть лыжные базы.',
-  'Огромное количество достопримечательностей в центральной части города. На окраине есть аутентичные места для тихого отдыха.',
-  'Этот город славится парками развлечения и игорными домами.',
-  'Идеальное место для тихого отдыха.'
-];
-
-const CITES = ['Rubcovsk', 'Novosibirsk', 'Barnaul', 'Moscow', 'London', 'Rome', 'Saint-Petersburg'];
 
 const DEFAULT_TYPE = 'flight';
 
@@ -32,15 +20,9 @@ const POINT_EMPTY = {
 };
 
 
-const AUTHORIZATION = 'Basic hS2sfS24wcl1sa2j';
+const AUTHORIZATION = 'Basic hS2saS24wcl1sa2j';
 
 const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
-
-const Duration = {
-  MIN: 59,
-  DAY: 7,
-  HOUR: 23
-};
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -66,6 +48,7 @@ const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  ERROR: 'ERROR',
 };
 
 const Method = {
@@ -76,14 +59,10 @@ const Method = {
 };
 
 export {
-  TYPES,
-  DESCRIPTIONS,
-  CITES,
   POINT_EMPTY,
   DATE_FORMAT,
   AUTHORIZATION,
   END_POINT,
-  Duration,
   FilterType,
   SortType,
   UserAction,

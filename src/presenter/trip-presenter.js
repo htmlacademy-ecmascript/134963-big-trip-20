@@ -6,7 +6,9 @@ import NewEventPresenter from './new-event-presenter.js';
 import PointPresenter from './point-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import FilterPresenter from './filter-presenter.js';
+import HeaderPresenter from './header-presenter.js';
 import NewTaskButtonView from '../view/new-task-button-view.js';
+import ErrorView from '../view/error-view.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortByPriceDesc , sortByTimeDesc, sortByDateFrom } from '../utils/sort.js';
 import { remove, render} from '../framework/render.js';
@@ -36,12 +38,14 @@ export default class TripPresenter {
 
   #tripListComponent = new TripPointsListView();
   #loadingComponent = new LoadingView();
+  #errorComponent = new ErrorView();
   #newEventButtonComponent = null;
   #sortComponent = null;
   #emptyListComponent = null;
 
   #pointPresenters = new Map();
   #newEventPresenter = null;
+
   #isLoading = true;
 
   constructor({ tripContainer, tripFilterContainer, tripMainElement, pointsModel, offersModel, destinationsModel, filterModel}) {
@@ -85,6 +89,7 @@ export default class TripPresenter {
     this.#renderTripPoint();
     this.#renderFilters();
     this.#renderNewEventButton();
+    this.#renderHeaderPresenter();
   }
 
   #renderTripPointList() {
@@ -147,8 +152,18 @@ export default class TripPresenter {
     filterPresenter.init();
   }
 
+  #renderHeaderPresenter() {
+    const headerPresenter = new HeaderPresenter({ headerContainer: this.#tripMainElement});
+
+    headerPresenter.init();
+  }
+
   #renderLoading() {
     render(this.#loadingComponent, this.#tripContainer);
+  }
+
+  #renderError() {
+    render(this.#errorComponent, this.#tripContainer);
   }
 
   #renderNewEventButton() {
@@ -230,8 +245,16 @@ export default class TripPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
+        this.#clearContainer();
         remove(this.#loadingComponent);
         this.#renderTripPoint();
+        break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        this.#clearContainer();
+        remove(this.#loadingComponent);
+        remove(this.#newEventButtonComponent);
+        this.#renderError();
         break;
     }
   };

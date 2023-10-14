@@ -12,7 +12,7 @@ export default class NewEventPresenter {
   #destinationsModel = null;
   #offersModel = null;
 
-  #FormComponent = null;
+  #formComponent = null;
 
   constructor ({pointListContainer, onDataChange, onDestroy, point, destinations, offers}) {
     this.#pointListContainer = pointListContainer;
@@ -24,11 +24,11 @@ export default class NewEventPresenter {
   }
 
   init() {
-    if (this.#FormComponent !== null) {
+    if (this.#formComponent !== null) {
       return;
     }
 
-    this.#FormComponent = new FormView({
+    this.#formComponent = new FormView({
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
       isEditMode: true,
@@ -37,26 +37,26 @@ export default class NewEventPresenter {
       pointOffers: this.#offersModel.offers,
     });
 
-    render(this.#FormComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#formComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   destroy() {
-    if (this.#FormComponent === null) {
+    if (this.#formComponent === null) {
       return;
     }
 
     this.#handleDestroy();
 
-    remove(this.#FormComponent);
-    this.#FormComponent = null;
+    remove(this.#formComponent);
+    this.#formComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   setSaving() {
-    this.#FormComponent.updateElement({
+    this.#formComponent.updateElement({
       isDisabled: true,
       isSaving: true,
     });
@@ -64,14 +64,14 @@ export default class NewEventPresenter {
 
   setAborting() {
     const resetFormState = () => {
-      this.#FormComponent.updateElement({
+      this.#formComponent.updateElement({
         isDisabled: false,
         isSaving: false,
         isDeleting: false,
       });
     };
 
-    this.#FormComponent.shake(resetFormState);
+    this.#formComponent.shake(resetFormState);
   }
 
   #handleFormSubmit = (point) => {
